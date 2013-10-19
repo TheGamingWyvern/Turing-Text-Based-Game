@@ -1,0 +1,35 @@
+SOON TO COME! (0.9.0)
+-Real random mob generation
+-Room generation
+-Refined input commands
+-More mobs and items
+-Displayed Stats
+-Levelling
+-Refined gameplay balance
+-Trading with NPCs
+
+Version 0.8.3
+[added]Random exit generation.
+[added]Proper grammar!
+[fixed]Refined balacing on weapons, needs more work.
+[changed]wooden sword changed to sharp stick.
+[fixed]Inability to move up and down.
+[added]Character drawing disabled on a Y resolution less than 1024 pixels.
+[fixed]Bug where only 5 of 16 random messages showed up when the user enters gibberish or nothing.
+
+Known Bugs:
+None so far.
+
+Version 0.8.2
+[added]Quick command
+[added]customGet function
+[added]Character movement!
+[added]Spawn mobs!
+[added]Rooms and X,Y,Z coordinates!
+
+Known Bugs:
+1. Typing two or more directional commands will move you in the direction that comes first in the command line.
+2. Typing a command then an item or mob will result in a silly output such as:
+"You cannot go north west wooden sword"
+3. You can spawn too many mobs.
+4. Room generation IS NOT finished.

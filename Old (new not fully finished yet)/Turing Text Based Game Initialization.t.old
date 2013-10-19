@@ -1,0 +1,362 @@
+% Version 0.8.3 - UP AND DOWN!
+% Developed by Kyle Biro and Timothy Willard
+% Last Edited
+% August 4, 2013
+% 9:58 PM
+
+% This class allows "name" to be accessed in all classes in one for loop.
+class customClass
+    export var name
+    var name : string := "empty"
+end customClass
+
+% This class is for each direction that the player can move (up, down, etc.)
+class Direction
+    inherit customClass
+    export var userDirection
+    var userDirection : string
+end Direction
+
+% This class is the parent for all the items that can go in your inventory.
+class Item
+    inherit customClass
+    export var all
+    var description : string := ""
+    var itemType : string := ""
+    var minAttr : int := 0
+    var maxAttr : int := 0
+end Item
+
+% These classes hold all the different item types.
+class Weapon
+    inherit Item
+    itemType := "weapon"
+end Weapon
+
+class Shield
+    inherit Item
+    itemType := "shield"
+end Shield
+
+class Helmet
+    inherit Item
+    itemType := "helmet"
+end Helmet
+
+class BodyArmor
+    inherit Item
+    itemType := "torso"
+end BodyArmor
+
+class LegArmor
+    inherit Item
+    itemType := "legs"
+end LegArmor
+
+class FeetArmor
+    inherit Item
+    itemType := "feet"
+end FeetArmor
+
+class Consumable
+    inherit Item
+    itemType := "consumable"
+end Consumable
+
+% These instances are to prevent the armor slots for the player from returning as uninitialized.
+var noWeapon : ^Weapon
+new noWeapon
+var noShield : ^Shield
+new noShield
+var noHelmet : ^Helmet
+new noHelmet
+var noBodyArmor : ^BodyArmor
+new noBodyArmor
+var noLegArmor : ^LegArmor
+new noLegArmor
+var noFeetArmor : ^FeetArmor
+new noFeetArmor
+
+% This class is for any enemy (and the player) in the game. Contains armor slots, health, attack, etc.
+class Entity
+    inherit customClass
+    import Shield, Weapon, Helmet, BodyArmor, LegArmor, FeetArmor,
+	noWeapon, noShield, noHelmet, noBodyArmor, noLegArmor, noFeetArmor
+    export var all
+    var mainHand : ^Weapon := noWeapon
+    var offHand : ^Shield := noShield
+    var Head : ^Helmet := noHelmet
+    var Torso : ^BodyArmor := noBodyArmor
+    var Legs : ^LegArmor := noLegArmor
+    var Feet : ^FeetArmor := noFeetArmor
+    var minAttackValue, maxAttackValue : int := 0
+    var minDefenseValue, maxDefenseValue : int := 0
+    % The health values are the random minimum and meximum values for the starting health for a mob, while the
+    % Mob healths are for the actualy random value generated.
+    var minHealthValue, maxHealthValue : int := 0
+    var currentMobHealth, maxMobHealth : int := 0
+end Entity
+
+var player : ^Entity
+new player
+
+% Initializes the player's base stats when he/she starts the game.
+player -> name := "player"
+player -> minAttackValue := 3
+player -> maxAttackValue := 5
+player -> minDefenseValue := 5
+player -> maxDefenseValue := 5
+player -> maxMobHealth := 50
+player -> currentMobHealth := 50
+
+var tempText : string
+var tempInt : int := 1
+var textStorage : int
+
+var noItemSize : int := 0
+var noItem : flexible array 1 .. noItemSize of string
+var numCommands : int := 0
+var commandArray : flexible array 1 .. numCommands, 1 .. 5 of string
+
+var previousTextStart : int := 1
+var previousTextEnd : int := maxrow - 6
+var previousTextLocation : int
+var previousText : array 1 .. (maxrow - 6) of string
+
+var convert : string
+
+var numItems : int := 0
+var existingItems : flexible array 1 .. numItems of ^Item
+
+var numEntities : int := 0
+var existingEntities : flexible array 1 .. numEntities of ^Entity
+
+var numDirections : int := 0
+var existingDirections : flexible array 1 .. numDirections of ^Direction
+
+% The noun array stores all possible subjects for a command (ex. Items, Entities, etc.) so they can be accessed
+% in one for loop
+var numNoun := 0
+var noun : flexible array 1 .. numNoun of ^customClass
+
+% This is a simple way to avoid having a nil pointer error in the Add/DropItem procedures.
+var nothing : ^Item
+new nothing
+
+var BAG_SIZE : int := 10
+var inventorySlots : flexible array 1 .. BAG_SIZE of ^Item
+
+% Initializing all the inventory slots as nil.
+for i : 1 .. BAG_SIZE
+    inventorySlots (i) := nothing
+end for
+
+open : textStorage, "arrayContents.txt", get
+
+% Reads in all the random messages for when the user enters a blank or unrecognizable data in the game.
+loop
+    noItemSize += 1
+    new noItem, noItemSize
+    get : textStorage, tempText : *
+    exit when tempText = "-----"
+    noItem (noItemSize) := tempText
+end loop
+
+get : textStorage, tempText : *
+
+% Reads in all the commands.
+loop
+    exit when tempText = "-----"
+    numCommands += 1
+    new commandArray, numCommands, upper (commandArray, 2)
+
+    for j : 1 .. upper (commandArray, 2)
+
+	if tempText = "" and j not= 1 then
+
+	    for k : j .. upper (commandArray, 2)
+		commandArray (numCommands, k) := ""
+	    end for
+
+	elsif tempText = "" and j = 1 then
+	    get : textStorage, tempText : *
+	elsif tempText = "-----" then
+
+	    for k : j .. upper (commandArray, 2)
+		commandArray (numCommands, k) := ""
+	    end for
+
+	    exit
+	end if
+	commandArray (numCommands, j) := tempText
+
+	get : textStorage, tempText : *
+
+    end for
+end loop
+
+%%%%%%%%%%%%%%%%%%%  READ IN ALL ITEMS  %%%%%%%%%%%%%%%%%%%%%%%%%
+var tempItem : ^Item
+var tempWeapon : ^Weapon
+var tempShield : ^Shield
+var tempHelmet : ^Helmet
+var tempChestplate : ^BodyArmor
+var tempLegs : ^LegArmor
+var tempFeet : ^FeetArmor
+var tempConsumable : ^Consumable
+
+% Creates temp storage for everything.
+new tempWeapon
+new tempShield
+new tempHelmet
+new tempChestplate
+new tempLegs
+new tempFeet
+new tempConsumable
+tempItem := tempWeapon
+
+loop
+    get : textStorage, tempText : *
+    if tempText = "-----" then
+	case tempItem -> itemType of
+	    label "weapon" :
+		tempItem := tempShield
+	    label "shield" :
+		tempItem := tempHelmet
+	    label "helmet" :
+		tempItem := tempChestplate
+	    label "torso" :
+		tempItem := tempLegs
+	    label "legs" :
+		tempItem := tempFeet
+	    label "feet" :
+		tempItem := tempConsumable
+	    label "consumable" :
+		exit
+	end case
+	get : textStorage, tempText : *
+    else
+	case tempItem -> itemType of
+	    label "weapon" :
+		new tempWeapon
+		tempItem := tempWeapon
+	    label "shield" :
+		new tempShield
+		tempItem := tempShield
+	    label "helmet" :
+		new tempHelmet
+		tempItem := tempHelmet
+	    label "torso" :
+		new tempChestplate
+		tempItem := tempChestplate
+	    label "legs" :
+		new tempLegs
+		tempItem := tempLegs
+	    label "feet" :
+		new tempFeet
+		tempItem := tempFeet
+	    label "consumable" :
+		new tempConsumable
+		tempItem := tempConsumable
+	end case
+    end if
+
+    numItems += 1
+
+    new existingItems, numItems
+
+    tempItem -> name := tempText
+
+    get : textStorage, tempText : *
+    tempItem -> description := tempText
+
+    get : textStorage, tempText : *
+    tempInt := strint (tempText)
+    tempItem -> minAttr := tempInt
+
+    get : textStorage, tempText : *
+    tempInt := strint (tempText)
+    tempItem -> maxAttr := tempInt
+
+    existingItems (numItems) := tempItem
+end loop
+
+var tempDirection : ^Direction
+
+%%%%%%%%%%%%%%%%%%%  READ IN ALL DIRECTIONS  %%%%%%%%%%%%%%%%%%%%%%%%%
+
+loop
+    new tempDirection
+    get : textStorage, tempText : *
+    exit when tempText = "-----"
+    numDirections += 1
+    new existingDirections, numDirections
+
+    tempDirection -> name := tempText
+
+    get : textStorage, tempText : *
+    tempDirection -> userDirection := tempText
+
+    existingDirections (numDirections) := tempDirection
+end loop
+
+close : textStorage
+open : textStorage, "mobs.txt", get
+
+%%%%%%%%%%%%%%%%%%%  READ IN ALL MOBS  %%%%%%%%%%%%%%%%%%%%%%%%%
+loop
+    var tempEntity : ^Entity
+    new tempEntity
+
+    exit when eof (textStorage)
+
+    numEntities += 1
+    new existingEntities, numEntities
+
+    loop
+	get : textStorage, tempText : *
+
+	exit when tempText = "-----"
+
+	var locationOfColon : int := 0
+	locationOfColon := index (tempText, ":")
+
+	case tempText (1 .. locationOfColon - 1) of
+	    label "name" :
+		tempEntity -> name := tempText (locationOfColon + 1 .. *)
+	    label "minimum attack" :
+		tempEntity -> minAttackValue := strint (tempText (locationOfColon + 1 .. *))
+	    label "maximum attack" :
+		tempEntity -> maxAttackValue := strint (tempText (locationOfColon + 1 .. *))
+	    label "minimum defense" :
+		tempEntity -> minDefenseValue := strint (tempText (locationOfColon + 1 .. *))
+	    label "maximum defense" :
+		tempEntity -> maxDefenseValue := strint (tempText (locationOfColon + 1 .. *))
+	    label "minimum health" :
+		tempEntity -> minHealthValue := strint (tempText (locationOfColon + 1 .. *))
+	    label "maximum health" :
+		tempEntity -> maxHealthValue := strint (tempText (locationOfColon + 1 .. *))
+	end case
+    end loop
+    existingEntities (numEntities) := tempEntity
+end loop
+
+close : textStorage
+
+numNoun := numItems + numEntities + numDirections
+new noun, numNoun
+
+for i : 1 .. numNoun
+    if i <= numItems then
+	noun (i) := existingItems (i)
+    elsif i > numItems and i <= numItems + numEntities then
+	noun (i) := existingEntities (i - numItems)
+    else
+	noun (i) := existingDirections (i - (numItems + numEntities))
+    end if
+end for
+
+
+for i : 1 .. (maxrow - 6)
+    previousText (i) := ""
+end for

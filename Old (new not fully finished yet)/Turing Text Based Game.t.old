@@ -1,0 +1,1039 @@
+% Version 0.8.3 - UP AND DOWN!
+% Developed by Kyle Biro and Timothy Willard
+% Last Edited
+% July 20, 2013
+% 3:12 PM
+
+% RETURN ALWAYS LEAVES PROCEDURE //FOR TIM\\
+% EXIT ONLY EXITS LOOPS //FOR TIM\\
+
+import GUI
+
+View.Set ("offscreenonly")
+View.Set ("title:The Dungeons")
+setscreen ("nobuttonbar")
+setscreen ("graphics:max;max")
+
+colorback (black)
+color (brightgreen)
+
+var startGameButton : int
+startGameButton := GUI.CreateButtonFull (maxx div 2 - 100, maxy div 2, 200, "START GAME  [S]",
+    GUI.Quit, 50, 's', true)
+
+loop
+    exit when GUI.ProcessEvent
+end loop
+
+cls
+
+% Includes the init file for the game, see the file for more.
+include "Turing Text Based Game Initialization.t"
+
+var storedText : string := ""
+var uninitBoolean : int := 16#FF
+
+% Explanation
+% Class Room stores everything to do with the current room.
+% The arrays store what can be in the room. So only 20 mobs, 20 items, and then a possible
+%  20 room conditions.
+class Room
+    import Entity, Item
+    export var all
+    var numMobsInRoom, numItemsInRoom : int := 0
+    var mobsInRoom : array 1 .. 20 of ^Entity
+    var itemsInRoom : array 1 .. 20 of ^Item
+    var environmentSettings : array 1 .. 20 of string
+    var eastDoor, westDoor, northDoor, southDoor, upStair, downStair : boolean
+
+    for i : 1 .. 20
+	mobsInRoom (i) := nil
+	itemsInRoom (i) := nil
+	environmentSettings (i) := ""
+    end for
+
+end Room
+
+var tempRoom : ^Room
+new tempRoom
+
+% previousInputs stores all your inputs so you can use the up arrow key to have them automatically
+%  entered into the input text field.
+% By default, when the user presses the up arrow key, it will use the look command.
+var numInputs : int := 1
+var previousInputs : flexible array 1 .. numInputs of string
+previousInputs (1) := "look"
+
+% Sets the default room to 0, 0, 0
+var x, y, z : int := 0
+
+% The world is rendered as a rectangular prism and will be 80x40x80
+var roomCoord : array - 40 .. 40, 0 .. 40, -40 .. 40 of ^Room
+
+for i : lower (roomCoord, 1) .. upper (roomCoord, 1)
+    for j : lower (roomCoord, 2) .. upper (roomCoord, 2)
+	for k : lower (roomCoord, 3) .. upper (roomCoord, 3)
+	    roomCoord (i, j, k) := nil
+	end for
+    end for
+end for
+
+% Stores the rooms in tempRoom
+roomCoord (x, y, z) := tempRoom
+
+% The first room will always have doors in all directions, except for up and down
+roomCoord (x, y, z) -> northDoor := true
+roomCoord (x, y, z) -> eastDoor := true
+roomCoord (x, y, z) -> southDoor := true
+roomCoord (x, y, z) -> westDoor := true
+roomCoord (x, y, z) -> upStair := true
+roomCoord (x, y, z) -> downStair := false
+
+var command := 0
+var inputMatch := 0
+var myRandint : int
+
+var itemSubjects : int := 0
+var entitySubjects : int := 0
+var directionSubjects : int := 0
+
+var requestedItem : ^Item := nil
+var requestedEntity : ^Entity := nil
+var requestedDirection : ^Direction := nil
+
+var input : string := ""
+
+var resY : int
+resY := maxy
+
+%%%%%%%%%%%%%%%%%%%%%%%%%  UPPERCASE  %%%%%%%%%%%%%%%%%%%%%%%%%
+% Explanation
+% Takes a string and changes the first letter to the appropriate uppercase letter.
+% Used when displaying description, inventory, and gear.
+fcn makeUppercase (lowercaseString : string) : string
+    var uppercaseLetter : string
+    var uppercaseString : string
+    uppercaseLetter := chr (ord (lowercaseString (1)) - 32)
+    uppercaseString := uppercaseLetter + lowercaseString (2 .. length (lowercaseString))
+    result uppercaseString
+end makeUppercase
+%%%%%%%%%%%%%%%%%%%%%%%%%  DRAW CHARACTER  %%%%%%%%%%%%%%%%%%%%%%%%%
+% Explanation
+% Draws a thick stick-figure to the screen and changes colour
+%  based on how hurt the player is. Character model will be disabled if resolution
+% is too small.
+proc drawCharacter
+    var characterColour : int
+    if resY >= 1024 then
+	if player -> currentMobHealth > 0 then
+	    characterColour := ceil ((player -> currentMobHealth div (player -> maxMobHealth div 8)) + 40)
+	    Draw.FillOval (maxx * 5 div 6, maxy * 11 div 12, (maxx div 38.4), (maxx div 38.4), characterColour)
+	    Draw.FillBox ((maxx * 5 div 6) - (maxx div 38.4), (maxy * 11 div 12) - (maxy div 30), (maxx * 5 div 6) + (maxx div 38.4), (maxy * 11 div 12) - (maxy div 6), characterColour)
+	    Draw.ThickLine ((maxx * 5 div 6) - (maxx div 38.4), (maxy * 11 div 12) - (maxy * 1000000 div (1200 * 1000000 div 65)), maxx * 9 div 12, (maxy * 11 div 12) - (maxy div 9.6), (maxy div 24),
+		characterColour)
+	    Draw.ThickLine ((maxx * 5 div 6) + (maxx div 38.4), (maxy * 11 div 12) - (maxy * 1000000 div (1200 * 1000000 div 65)), maxx * 11 div 12, (maxy * 11 div 12) - (maxy div 9.6), (maxy div 24),
+		characterColour)
+	    Draw.ThickLine ((maxx * 5 div 6) - (maxx div 76.8), (maxy * 11 div 12) - (maxy div 6), (maxx * 19 div 24) + (maxx div (1920 div 35)), (maxy * 11 div 12) - ((maxy * 1000000) div (1200 *
+		1000000 div 325)), (maxy div 24), characterColour)
+	    Draw.ThickLine ((maxx * 5 div 6) + (maxx div 76.8), (maxy * 11 div 12) - (maxy div 6), (maxx * 21 div 24) - (maxx div (1920 div 35)), (maxy * 11 div 12) - ((maxy * 1000000) div (1200 *
+		1000000 div 325)), (maxy div 24), characterColour)
+	end if
+    elsif resY <= 1024 then
+	return
+    end if
+end drawCharacter
+%%%%%%%%%%%%%%%%%%%%%%%%%  ADD TEXT  %%%%%%%%%%%%%%%%%%%%%%%%%
+proc addText (textToAdd : string)
+    previousText (previousTextStart) := textToAdd
+    previousTextStart += 1
+    previousTextEnd += 1
+
+    if previousTextStart > upper (previousText) then
+	previousTextStart := 1
+    end if
+
+    if previousTextEnd > upper (previousText) then
+	previousTextEnd := 1
+    end if
+end addText
+%%%%%%%%%%%%%%%%%%%%%%%%%  DISPLAY INVENTORY  %%%%%%%%%%%%%%%%%%%%%%%%%
+% Explanation
+% Displays all items in the inventory on the right side of the screen
+%  that is seperate from the main game text box.
+proc displayInventory
+    locate ((maxrow - 33), (maxcol * 2 div 3 + 3))
+    put "INVENTORY"
+
+    for i : 1 .. upper (inventorySlots)
+	convert := intstr (i)
+	if inventorySlots (i) = nothing then
+	    locate (i + (maxrow - 33), (maxcol * 2 div 3 + 3))
+	    put convert + ": Empty"
+	else
+	    tempText := makeUppercase (inventorySlots (i) -> name)
+	    locate (i + (maxrow - 33), (maxcol * 2 div 3 + 3))
+	    put convert + ": " + tempText
+	end if
+    end for
+end displayInventory
+%%%%%%%%%%%%%%%%%%%%%%%%%  DISPLAY GEAR  %%%%%%%%%%%%%%%%%%%%%%%%%
+% Explanation
+% Displays all the gear that the player is wearing to the far right of the screen.
+% Until changed by equipping an item, it will be displayed as 'Empty'.
+proc displayGear
+    locate (maxrow - 33, maxcol * 5 div 6 + 3)
+    put "GEAR"
+    locate (maxrow - 32, maxcol * 5 div 6 + 3)
+    put "Head: " + makeUppercase (player -> Head -> name)
+    locate (maxrow - 31, maxcol * 5 div 6 + 3)
+    put "Torso: " + makeUppercase (player -> Torso -> name)
+    locate (maxrow - 30, maxcol * 5 div 6 + 3)
+    put "Legs: " + makeUppercase (player -> Legs -> name)
+    locate (maxrow - 29, maxcol * 5 div 6 + 3)
+    put "Feet: " + makeUppercase (player -> Feet -> name)
+    locate (maxrow - 28, maxcol * 5 div 6 + 3)
+    put "Main Hand: " + makeUppercase (player -> mainHand -> name)
+    locate (maxrow - 27, maxcol * 5 div 6 + 3)
+    put "Off-hand: " + makeUppercase (player -> offHand -> name)
+end displayGear
+%%%%%%%%%%%%%%%%%%%%%%%%%  CUSTOM PUT  %%%%%%%%%%%%%%%%%%%%%%%%%
+% Explanation
+% This is where all the of the text display happens.
+% It keeps the text in a certain border so the game's UI looks nice and doesn't clip
+%  into the character drawing or inventory.
+% This also makes the inventory display nicely, and the character, and the gear.
+proc customPut (userInput : string, continue : boolean)
+    if continue then
+	storedText := storedText + userInput
+	loop
+	    if length (storedText) <= maxcol * 2 div 3 - 1 or length (storedText) = 0 then
+		exit
+	    else
+		for i : 0 .. length (storedText) - 1
+		    if storedText (length (storedText) - i) = " " and length (storedText) - i <= maxcol * 2 div 3 then
+			addText (storedText (1 .. length (storedText) - i))
+			storedText := storedText (length (storedText) - i + 1 .. length (storedText))
+			exit
+		    end if
+		end for
+	    end if
+	end loop
+    else
+	storedText := storedText + userInput
+	previousTextLocation := 5
+
+	loop
+	    exit when length (storedText) < (maxcol * 2 div 3) - 1
+
+	    for i : 0 .. length (storedText) - 1
+		if storedText (length (storedText) - i) = " " and length (storedText) - i <= maxcol * 2 div 3 then
+		    addText (storedText (1 .. length (storedText) - i))
+		    storedText := storedText (length (storedText) - i + 1 .. length (storedText))
+		    exit
+		end if
+	    end for
+	end loop
+
+	cls
+
+	addText (storedText)
+	storedText := ""
+
+	if previousTextStart <= previousTextEnd then
+	    for i : 1 .. (maxrow - 6)
+		if previousText (i) not= "" then
+
+		    for j : i .. (maxrow - 6)
+			locate (5 + (j - i), 1)
+			put previousText (j)
+		    end for
+		    exit
+		end if
+	    end for
+	else
+	    for i : previousTextStart .. upper (previousText)
+		if previousText (i) not= "" then
+
+		    for j : i .. upper (previousText)
+			locate (previousTextLocation, 1)
+			put previousText (j)
+			previousTextLocation += 1
+		    end for
+		    exit
+		end if
+	    end for
+
+	    for i : 1 .. previousTextEnd
+		locate (previousTextLocation, 1)
+		put previousText (i)
+		previousTextLocation += 1
+	    end for
+	end if
+
+	locate (2, 1)
+	put "Health: ", player -> currentMobHealth, "/", player -> maxMobHealth
+	locate (2, (maxcol * 2 div 3) - 29)
+	put "Coordinates: (", x, ", ", y, ", ", z, ")"
+
+	Draw.ThickLine (1, maxy - 55, maxx * 2 div 3, maxy - 55, 3, red)
+	Draw.ThickLine (maxx * 2 div 3, 30, maxx * 2 div 3, maxy, 3, red)
+	Draw.ThickLine (1, 30, maxx, 30, 3, red)
+
+	displayInventory
+	displayGear
+	drawCharacter
+	View.Update
+    end if
+end customPut
+%%%%%%%%%%%%%%%%%%%%%%%%%  CUSTOM GET  %%%%%%%%%%%%%%%%%%%%%%%%%
+% Explanation
+% This is where all the of the input handling is.
+% This function's sole purpose is to enable the quick-command feature with the up arrow key.
+% It also makes all makes all capital letters lowercase.
+function customGet () : string
+    tempText := ""
+    var inputKey : string (1)
+    var numArrowKey : int := numInputs + 1
+
+    loop
+	getch (inputKey)
+	if ord (inputKey) >= 65 and ord (inputKey) <= 90 then
+	    inputKey := chr (ord (inputKey) + 32)
+	    tempText := tempText + inputKey
+	elsif (ord (inputKey) >= 97 and ord (inputKey) <= 122) or ord (inputKey) = 32 or (ord (inputKey) >= 48
+		and ord (inputKey) <= 57) then
+	    tempText := tempText + inputKey
+	elsif ord (inputKey) = 10 then
+	    exit
+	elsif ord (inputKey) = 200 then
+	    numArrowKey -= 1
+	    if numArrowKey <= 0 then
+		numArrowKey := 1
+	    end if
+	    tempText := previousInputs (numArrowKey)
+	elsif ord (inputKey) = 208 then
+	    numArrowKey += 1
+	    if numArrowKey > numInputs then
+		numArrowKey := numInputs
+	    end if
+	    tempText := previousInputs (numArrowKey)
+	elsif ord (inputKey) = 8 then
+	    if length (tempText) > 1 then
+		tempText := tempText (1 .. length (tempText) - 1)
+	    else
+		tempText := ""
+	    end if
+	end if
+	cls
+
+	locate (maxrow, 1)
+
+	put tempText ..
+	View.Update
+    end loop
+
+    if tempText not= previousInputs (numInputs) then
+	numInputs += 1
+	new previousInputs, numInputs
+	previousInputs (numInputs) := tempText
+    end if
+
+    result tempText
+end customGet
+%%%%%%%%%%%%%%%%%%%%%%%%%  NO INPUT SUBJECT  %%%%%%%%%%%%%%%%%%%%%%%%%
+% Explanation
+% Used when the user only types a command and does not enter a subject for the command.
+proc noSecondInput
+    var currentMatch : string := commandArray (command, inputMatch)
+    customPut (makeUppercase (currentMatch) + "...?", false)
+end noSecondInput
+%%%%%%%%%%%%%%%%%%%%%%%%%  SHIFT ITEMS  %%%%%%%%%%%%%%%%%%%%%%%%%
+% Explanation
+% Works like other programming languages's Array.Shift() function
+% When items are removed from the begining of the inventory, they are
+%  shifted up to make the inventory display look nice.
+proc shiftItems
+    for i : 1 .. upper (inventorySlots)
+	if inventorySlots (i) = nothing then
+	    for j : i .. upper (inventorySlots)
+		if j not= upper (inventorySlots) then
+		    inventorySlots (j) := inventorySlots (j + 1)
+		else
+		    inventorySlots (j) := nothing
+		end if
+	    end for
+	end if
+    end for
+end shiftItems
+%%%%%%%%%%%%%%%%%%%%%%%%%  ADD ITEMS  %%%%%%%%%%%%%%%%%%%%%%%%%
+% Explanation
+% All of this is related with adding items.
+% When the inventory is full, it will tell you that, and not add any more items.
+% The program will only add items in the next available slot.
+proc addItem (itemToAdd : ^Item)
+    if inventorySlots (10) not= nothing then
+	customPut ("Your inventory is full.", false)
+	return
+    else
+	for i : 1 .. upper (inventorySlots)
+	    if inventorySlots (i) = nothing then
+		inventorySlots (i) := itemToAdd
+		customPut ("You took the " + itemToAdd -> name + ".", false)
+		return
+	    end if
+	end for
+    end if
+    customPut ("There is no " + itemToAdd -> name + " here.", false)
+end addItem
+%%%%%%%%%%%%%%%%%%%%%%%%%  DROP ITEMS  %%%%%%%%%%%%%%%%%%%%%%%%%
+% Explanation
+% This will look through your inventory for the requested item (itemToDrop) and will remove it
+%  from your inventory and put it in the room.
+% If you don't have the item you asked to drop, the program will tell you that you do not have it.
+proc dropItem (itemToDrop : ^Item)
+    if itemToDrop = nothing then
+	noSecondInput
+	return
+    else
+	for i : 1 .. 10
+	    if inventorySlots (i) -> name = itemToDrop -> name then
+		customPut ("You dropped the " + inventorySlots (i) -> name, false)
+		inventorySlots (i) := nothing
+		shiftItems
+		return
+	    end if
+	end for
+    end if
+
+    customPut ("You do not have", true)
+
+    for i : 1 .. upper (inventorySlots)
+	case itemToDrop -> name (length (itemToDrop -> name)) of
+	    label "s" :
+		customPut (" " + itemToDrop -> name + " in your backpack.", true)
+		return
+	    label :
+		case itemToDrop -> name (1) of
+		    label "a", "e", "i", "o", "u" :
+			customPut (" an " + itemToDrop -> name + " in your backpack.", true)
+			return
+		    label :
+			customPut (" a " + itemToDrop -> name + " in your backpack.", true)
+			return
+		end case
+	end case
+	return
+    end for
+end dropItem
+%%%%%%%%%%%%%%%%%%%%%%%%%  INSPECT ITEMS  %%%%%%%%%%%%%%%%%%%%%%%%%
+% Explanation
+% Looks through your inventory to see if you have the requested item (itemToInspect)
+%  and then display its description.
+% Like drop and add, if the item is not there, the program will tell you that you do not have it.
+proc inspectItem (itemToInspect : ^Item)
+    for i : 1 .. upper (inventorySlots)
+	if inventorySlots (i) = itemToInspect then
+	    tempText := makeUppercase (inventorySlots (i) -> name)
+	    customPut (tempText + ": " + inventorySlots (i) -> description, false)
+	    return
+	end if
+    end for
+
+    customPut ("You do not have", true)
+
+    for i : 1 .. upper (inventorySlots)
+	case itemToInspect -> name (length (itemToInspect -> name)) of
+	    label "s" :
+		customPut (" " + itemToInspect -> name + " in your backpack.", true)
+		return
+	    label :
+		case itemToInspect -> name (1) of
+		    label "a", "e", "i", "o", "u" :
+			customPut (" an " + itemToInspect -> name + " in your backpack.", true)
+			return
+		    label :
+			customPut (" a " + itemToInspect -> name + " in your backpack.", true)
+			return
+		end case
+	end case
+	return
+    end for
+end inspectItem
+%%%%%%%%%%%%%%%%%%%%%%%%%  EQUIP ITEMS  %%%%%%%%%%%%%%%%%%%%%%%%%
+% Explanation
+% Checks the requested item's item type (itemToEquip -> itemType) and makes sure that
+%  the item you want to equip is indeed an equippable (chest piece, helmet).
+% If the item is an equippable, then it is put in the respective slot.
+% If the item is not an equippable, then you will be told that it is not an equippable, and that
+%  it cannot be equipped.
+proc equipItems (itemToEquip : ^Item)
+    for i : 1 .. upper (inventorySlots)
+	if itemToEquip = nothing then
+	    noSecondInput
+	    return
+	elsif inventorySlots (i) = itemToEquip then
+	    case itemToEquip -> itemType of
+		label "weapon" :
+		    if player -> mainHand not= noWeapon then
+			inventorySlots (i) := player -> mainHand
+		    else
+			inventorySlots (i) := nothing
+		    end if
+		    player -> mainHand := itemToEquip
+		label "shield" :
+		    if player -> offHand not= noShield then
+			inventorySlots (i) := player -> offHand
+		    else
+			inventorySlots (i) := nothing
+		    end if
+		    player -> offHand := itemToEquip
+		label "helmet" :
+		    if player -> Head not= noHelmet then
+			inventorySlots (i) := player -> Head
+		    else
+			inventorySlots (i) := nothing
+		    end if
+		    player -> Head := itemToEquip
+		label "torso" :
+		    if player -> Torso not= noBodyArmor then
+			inventorySlots (i) := player -> Torso
+		    else
+			inventorySlots (i) := nothing
+		    end if
+		    player -> Torso := itemToEquip
+		label "legs" :
+		    if player -> Legs not= noLegArmor then
+			inventorySlots (i) := player -> Legs
+		    else
+			inventorySlots (i) := nothing
+		    end if
+		    player -> Legs := itemToEquip
+		label "feet" :
+		    if player -> Feet not= noFeetArmor then
+			inventorySlots (i) := player -> Feet
+		    else
+			inventorySlots (i) := nothing
+		    end if
+		    player -> Feet := itemToEquip
+		label :
+		    customPut ("You cannot equip that.", false)
+		    return
+	    end case
+	    shiftItems
+	    customPut ("You have equipped " + itemToEquip -> name, false)
+	    return
+	end if
+    end for
+    customPut ("You do not have that.", false)
+end equipItems
+%%%%%%%%%%%%%%%%%%%%%%%%%  CONSUME ITEM  %%%%%%%%%%%%%%%%%%%%%%%%%
+% Explanation
+% Consumables are only directly linked with healing and/or damaging the player or mobs.
+% Checks the item's type to make sure that it is a consumable.
+% If it is a consumable, then it will add the defined health to the player's health value.
+% If you cannot be healed any further, then you will be told the item had no effect.
+% If the item is a poison or has a harmful effect, then the defined value will be deducted from your current health
+%  and the proper message will be displayed (You lost X health).
+proc consumeItem (itemToConsume : ^Item)
+    for i : 1 .. upper (inventorySlots)
+	if inventorySlots (i) = itemToConsume then
+	    if itemToConsume -> itemType = "consumable" then
+		var healthMod : int := Rand.Int (itemToConsume -> minAttr, itemToConsume -> maxAttr)
+
+		player -> currentMobHealth += healthMod
+		if player -> currentMobHealth > player -> maxMobHealth then
+		    healthMod := healthMod - (player -> currentMobHealth - player -> maxMobHealth)
+		    player -> currentMobHealth := player -> maxMobHealth
+		end if
+
+		dropItem (itemToConsume)
+		tempText := intstr (abs (healthMod))
+		if healthMod > 0 then
+
+		    customPut ("You gained " + tempText + " health!", false)
+		elsif healthMod < 0 then
+		    customPut ("You lost " + tempText + " health!", false)
+		else
+		    customPut ("You already have full health!", false)
+		end if
+		return
+	    else
+		customPut ("You cannot consume a " + itemToConsume -> name, false)
+		return
+	    end if
+	end if
+    end for
+    customPut ("You do not have a " + itemToConsume -> name + ".", false)
+end consumeItem
+%%%%%%%%%%%%%%%%%%%%%%%%%  LOOK %%%%%%%%%%%%%%%%%%%%%%%%%
+% Explanation
+% This procedure lists all the items in a room, and all the exits.
+% It displays everything in its own sentence (items in one, exits in another)
+% If the item happens to start with a vowel, then it will plug in "an" instead of "a" so then
+%  the grammar is correct.
+% If the item happens to be plural (irom greaves, sticks) then the program will omit "an" and "a"
+%  ("You see iron greaves here.", instead of, "You see a iron greaves here.")
+proc look
+    customPut ("You see", true)
+    for i : 1 .. (upper (existingItems))
+	if i = upper (existingItems) then
+	    customPut (" and", true)
+	end if
+
+	case existingItems (i) -> name (length (existingItems (i) -> name)) of
+	    label "s" :
+		customPut (" " + existingItems (i) -> name, true)
+	    label :
+		case existingItems (i) -> name (1) of
+		    label "a", "e", "i", "o", "u" :
+			customPut (" an " + existingItems (i) -> name, true)
+		    label :
+			customPut (" a " + existingItems (i) -> name, true)
+		end case
+	end case
+
+	if i = upper (existingItems) then
+	    customPut (" on the dirty floor.", false)
+	else
+	    customPut (",", true)
+	end if
+    end for
+
+    bind var room to roomCoord (x, y, z)
+
+    if room -> northDoor or room -> eastDoor or room -> southDoor or room -> westDoor then
+	customPut ("There is a passage way to the ", true)
+
+	if room -> northDoor then
+	    customPut ("north", true)
+	    if room -> eastDoor or room -> southDoor or room -> westDoor then
+		customPut (", ", true)
+	    end if
+	end if
+	if room -> eastDoor then
+	    if room -> southDoor or room -> westDoor then
+		customPut ("east, ", true)
+	    elsif room -> northDoor then
+		customPut ("and east", true)
+	    else
+		customPut ("east", true)
+	    end if
+	end if
+	if room -> southDoor then
+	    if room -> westDoor then
+		customPut ("south, ", true)
+	    elsif room -> northDoor or room -> eastDoor then
+		customPut ("and south", true)
+	    else
+		customPut ("south", true)
+	    end if
+	end if
+	if room -> westDoor then
+	    if room -> northDoor or room -> southDoor or room -> eastDoor then
+		customPut ("and west", true)
+	    else
+		customPut ("west", true)
+	    end if
+	end if
+	customPut (" here.", false)
+    end if
+
+    if room -> upStair or room -> downStair then
+	customPut ("You notice a passage leading ", true)
+
+	if room -> upStair then
+	    if room -> downStair then
+		customPut ("up ", true)
+	    else
+		customPut ("up.", false)
+	    end if
+	end if
+
+	if room -> downStair then
+	    if room -> upStair then
+		customPut ("and down.", false)
+	    else
+		customPut ("down.", false)
+	    end if
+	end if
+    end if
+end look
+%%%%%%%%%%%%%%%%%%%%%%%%%  SPAWN MOBS (DEBUG!!!!!)  %%%%%%%%%%%%%%%%%%%%%%%%%
+% Explanation
+% DEBUG!!
+% Spawns mobs at the player's request, and spawns it in the room the player is in.
+% Only used for debug and to test gameplay balance
+proc spawnMob (mobToSpawn : ^Entity)
+    for i : 1 .. upper (existingEntities)
+	if existingEntities (i) = mobToSpawn then
+	    roomCoord (x, y, z) -> numMobsInRoom += 1
+	    roomCoord (x, y, z) -> mobsInRoom (roomCoord (x, y, z) -> numMobsInRoom) := existingEntities (i)
+
+	    roomCoord (x, y, z) -> mobsInRoom (roomCoord (x, y, z) -> numMobsInRoom) -> maxMobHealth := Rand.Int (roomCoord (x, y, z) ->
+		mobsInRoom (roomCoord (x, y, z) ->
+		numMobsInRoom) -> minHealthValue, roomCoord (x, y, z) -> mobsInRoom (roomCoord (x, y, z) ->
+		numMobsInRoom) -> maxHealthValue)
+
+	    roomCoord (x, y, z) -> mobsInRoom (roomCoord (x, y, z) -> numMobsInRoom) -> currentMobHealth :=
+		roomCoord (x, y, z) -> mobsInRoom (roomCoord (x, y, z) -> numMobsInRoom) -> maxMobHealth
+
+	    customPut ("You spawned the " + mobToSpawn -> name + ".", false)
+	end if
+    end for
+end spawnMob
+%%%%%%%%%%%%%%%%%%%%%%%%%  DAMAGE  %%%%%%%%%%%%%%%%%%%%%%%%%
+% Explanation
+% Calculates the damage the player and/or other mob is receiving.
+% Basically, the damage is reduced based on equipment and base stats.
+proc damage (mobDealingDamage, mobReceivingDamage : ^Entity)
+    var negatedDamage : int := Rand.Int (mobReceivingDamage -> minDefenseValue,
+	mobReceivingDamage -> maxDefenseValue) + Rand.Int (mobReceivingDamage -> Head -> minAttr,
+	mobReceivingDamage -> Head -> maxAttr) + Rand.Int (mobReceivingDamage -> Torso -> minAttr,
+	mobReceivingDamage -> Torso -> maxAttr) + Rand.Int (mobReceivingDamage -> Legs -> minAttr,
+	mobReceivingDamage -> Legs -> maxAttr) + Rand.Int (mobReceivingDamage -> Feet -> minAttr,
+	mobReceivingDamage -> Feet -> maxAttr) + Rand.Int (mobReceivingDamage -> offHand -> minAttr,
+	mobReceivingDamage -> offHand -> maxAttr)
+
+    var attackDamage : int := Rand.Int (mobDealingDamage -> minAttackValue,
+	mobDealingDamage -> maxAttackValue) + Rand.Int (mobDealingDamage -> mainHand -> minAttr,
+	mobDealingDamage -> mainHand -> maxAttr)
+
+    var damageDealt : int := attackDamage - negatedDamage
+
+    if damageDealt <= 0 then
+	damageDealt := 1
+    end if
+
+    mobReceivingDamage -> currentMobHealth -= damageDealt
+    customPut ("The " + mobReceivingDamage -> name + " received " + intstr (damageDealt) + " damage.", false)
+
+    if mobReceivingDamage -> currentMobHealth >= 1 then
+	customPut ("The " + mobReceivingDamage -> name + " has " + intstr (mobReceivingDamage -> currentMobHealth) + " health left.", false)
+    else
+	return
+    end if
+
+    customPut ("", false)
+end damage
+%%%%%%%%%%%%%%%%%%%%%%%%%  ATTACK  %%%%%%%%%%%%%%%%%%%%%%%%%
+proc attack (mobToAttack : ^Entity)
+    for i : 1 .. upper (roomCoord (x, y, z) -> mobsInRoom)
+	if roomCoord (x, y, z) -> mobsInRoom (i) = nil then
+	elsif mobToAttack = roomCoord (x, y, z) -> mobsInRoom (i) then
+	    damage (player, mobToAttack)
+	    if mobToAttack -> currentMobHealth <= 0 then
+		customPut ("You have killed the " + mobToAttack -> name + ".", false)
+		roomCoord (x, y, z) -> mobsInRoom (i) := nil
+	    end if
+	    return
+	end if
+    end for
+end attack
+%%%%%%%%%%%%%%%%%%%%%%%%%  RANDOM GENERATION  %%%%%%%%%%%%%%%%%%%%%%%%%
+proc randomGen
+    if roomCoord (x, y, z) = nil then
+	new tempRoom
+	roomCoord (x, y, z) := tempRoom
+
+	if Rand.Int (0, 1) = 0 then
+	    roomCoord (x, y, z) -> northDoor := false
+	else
+	    roomCoord (x, y, z) -> northDoor := true
+	end if
+
+	if Rand.Int (0, 1) = 0 then
+	    roomCoord (x, y, z) -> southDoor := false
+	else
+	    roomCoord (x, y, z) -> southDoor := true
+	end if
+
+	if Rand.Int (0, 1) = 0 then
+	    roomCoord (x, y, z) -> eastDoor := false
+	else
+	    roomCoord (x, y, z) -> eastDoor := true
+	end if
+
+	if Rand.Int (0, 1) = 0 then
+	    roomCoord (x, y, z) -> westDoor := false
+	else
+	    roomCoord (x, y, z) -> westDoor := true
+	end if
+
+	if Rand.Int (0, 25) = 0 then
+	    roomCoord (x, y, z) -> upStair := true
+	else
+	    roomCoord (x, y, z) -> upStair := false
+	end if
+
+	if Rand.Int (0, 25) = 0 then
+	    roomCoord (x, y, z) -> downStair := true
+	else
+	    roomCoord (x, y, z) -> downStair := false
+	end if
+
+	if x - 1 >= lower (roomCoord, 1) then
+	    if roomCoord (x - 1, y, z) not= nil then
+		if #roomCoord (x - 1, y, z) -> eastDoor not= uninitBoolean then
+		    roomCoord (x, y, z) -> westDoor := roomCoord (x - 1, y, z) -> eastDoor
+		end if
+	    end if
+	else
+	    roomCoord (x, y, z) -> westDoor := false
+	end if
+
+	if x + 1 <= upper (roomCoord, 1) then
+	    if roomCoord (x + 1, y, z) not= nil then
+		if #roomCoord (x + 1, y, z) -> westDoor not= uninitBoolean then
+		    roomCoord (x, y, z) -> eastDoor := roomCoord (x + 1, y, z) -> westDoor
+		end if
+	    end if
+	else
+	    roomCoord (x, y, z) -> eastDoor := false
+	end if
+
+	if y - 1 >= lower (roomCoord, 2) then
+	    if roomCoord (x, y - 1, z) not= nil then
+		if #roomCoord (x, y - 1, z) -> upStair not= uninitBoolean then
+		    roomCoord (x, y, z) -> downStair := roomCoord (x, y - 1, z) -> upStair
+		end if
+	    end if
+	else
+	    roomCoord (x, y, z) -> downStair := false
+	end if
+
+	if y + 1 <= upper (roomCoord, 2) then
+	    if roomCoord (x, y + 1, z) not= nil then
+		if #roomCoord (x, y + 1, z) -> downStair not= uninitBoolean then
+		    roomCoord (x, y, z) -> upStair := roomCoord (x, y + 1, z) -> downStair
+		end if
+	    end if
+	else
+	    roomCoord (x, y, z) -> upStair := false
+	end if
+
+	if z - 1 >= lower (roomCoord, 3) then
+	    if roomCoord (x, y, z - 1) not= nil then
+		if #roomCoord (x, y, z - 1) -> northDoor not= uninitBoolean then
+		    roomCoord (x, y, z) -> southDoor := roomCoord (x, y, z - 1) -> northDoor
+		end if
+	    end if
+	else
+	    roomCoord (x, y, z) -> southDoor := false
+	end if
+
+	if z + 1 <= upper (roomCoord, 3) then
+	    if roomCoord (x, y, z + 1) not= nil then
+		if #roomCoord (x, y, z + 1) -> southDoor not= uninitBoolean then
+		    roomCoord (x, y, z) -> northDoor := roomCoord (x, y, z + 1) -> southDoor
+		end if
+	    end if
+	else
+	    roomCoord (x, y, z) -> northDoor := false
+	end if
+
+    end if
+end randomGen
+%%%%%%%%%%%%%%%%%%%%%%%%%  MOVEMENT  %%%%%%%%%%%%%%%%%%%%%%%%%
+% Explanation
+% Checks in a text file to see if the current directional command
+%  is valid.
+% If so, then the user's coordinates are changed respectively, and a room is
+%  created when the user gets to a new coordinate.
+proc movement (directionToMove : ^Direction)
+    bind var currentDirection to directionToMove -> userDirection
+
+    case currentDirection of
+	label "n" :
+	    if roomCoord (x, y, z) -> northDoor then
+		if z + 1 <= upper (roomCoord, 3) then
+		    z += 1
+		end if
+	    else
+		customPut ("There is no exit " + directionToMove -> name + ".", false)
+		return
+	    end if
+	label "s" :
+	    if roomCoord (x, y, z) -> southDoor then
+		if z - 1 >= lower (roomCoord, 3) then
+		    z -= 1
+		end if
+	    else
+		customPut ("There is no exit " + directionToMove -> name + ".", false)
+		return
+	    end if
+	label "e" :
+	    if roomCoord (x, y, z) -> eastDoor then
+		if x + 1 <= upper (roomCoord, 1) then
+		    x += 1
+		end if
+	    else
+		customPut ("There is no exit " + directionToMove -> name + ".", false)
+		return
+	    end if
+	label "w" :
+	    if roomCoord (x, y, z) -> westDoor then
+		if x - 1 >= lower (roomCoord, 1) then
+		    x -= 1
+		end if
+	    else
+		customPut ("There is no exit " + directionToMove -> name + ".", false)
+		return
+	    end if
+	label "u" :
+	    if roomCoord (x, y, z) -> upStair then
+		if y + 1 <= upper (roomCoord, 2) then
+		    y += 1
+		end if
+	    else
+		customPut ("There is no exit " + directionToMove -> name + ".", false)
+		return
+	    end if
+	label "d" :
+	    if roomCoord (x, y, z) -> downStair then
+		if y - 1 >= lower (roomCoord, 2) then
+		    y -= 1
+		end if
+	    else
+		customPut ("There is no exit " + directionToMove -> name + ".", false)
+		return
+	    end if
+	label :
+    end case
+    randomGen
+    customPut ("You moved " + directionToMove -> name + ".", false)
+    look
+end movement
+%%%%%%%%%%%%%%%%%%%%%%%%%  MAIN  %%%%%%%%%%%%%%%%%%%%%%%%%
+% Explanation
+% When the player does something, the mobs, and possibly other
+%  environment objects will have their turn to attack, or move.
+proc simulate
+    for i : 1 .. upper (roomCoord (x, y, z) -> mobsInRoom)
+	if roomCoord (x, y, z) -> mobsInRoom (i) not= nil then
+	    damage (roomCoord (x, y, z) -> mobsInRoom (i), player)
+	end if
+    end for
+end simulate
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+proc getInput
+    command := 0
+    inputMatch := 0
+
+    itemSubjects := 0
+    entitySubjects := 0
+    directionSubjects := 0
+
+    requestedItem := nil
+    requestedEntity := nil
+    requestedDirection := nil
+
+    randint (myRandint, 1, 16)
+
+    var requestedMob : ^Entity
+
+    locate (maxrow, 1)
+    View.Set ("nooffscreenonly")
+
+    View.ClipSet (1, 1, maxx, 20)
+
+    input := customGet ()
+
+    View.Set ("offscreenonly")
+
+    View.ClipOff
+
+    customPut (input, false)
+
+    for i : 1 .. upper (commandArray, 1)
+	exit when command not= 0
+	for j : 1 .. upper (commandArray, 2)
+	    if index (input, commandArray (i, j)) = 1 and commandArray (i, j) not= "" then
+		command := i
+		inputMatch := j
+		input := input (length (commandArray (i, j)) + 1 .. length (input))
+		exit
+	    end if
+	end for
+    end for
+    % Explanation of 'i' for loop
+    % Searches the input to see if the command is valid,
+    %  then sets the command category so the program knows what
+    %  function or procedure to call.
+
+    for i : 1 .. upper (noun)
+	if index (input, noun (i) -> name) not= 0 then
+	    if objectclass (noun (i)) >= Item then
+		requestedItem := noun (i)
+		itemSubjects += 1
+	    elsif objectclass (noun (i)) >= Entity then
+		requestedEntity := noun (i)
+		entitySubjects += 1
+	    elsif objectclass (noun (i)) >= Direction then
+		requestedDirection := noun (i)
+		directionSubjects += 1
+	    end if
+	end if
+    end for
+end getInput
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+proc doCommand
+    if itemSubjects > 1 or entitySubjects > 1 or directionSubjects > 1 then
+	customPut ("Too many subjects to satisfy the input command.", false)
+    else
+	if requestedItem not= nil and requestedEntity = nil and requestedDirection = nil then
+	    case command of
+		label 3 :
+		    addItem (requestedItem)
+		label 4 :
+		    dropItem (requestedItem)
+		label 5 :
+		    inspectItem (requestedItem)
+		label 7 :
+		    consumeItem (requestedItem)
+		label 8 :
+		    equipItems (requestedItem)
+		label :
+	    end case
+
+	elsif requestedItem = nil and requestedEntity not= nil and requestedDirection = nil then
+	    case command of
+		label 10 :
+		    spawnMob (requestedEntity)
+		label 2 :
+		    attack (requestedEntity)
+		label :
+	    end case
+
+	elsif requestedDirection not= nil and requestedEntity = nil and requestedItem = nil then
+	    case command of
+		label 9 :
+		    movement (requestedDirection)
+		label :
+	    end case
+
+	elsif requestedItem = nil and requestedEntity = nil and requestedDirection = nil then
+	    case command of
+		label 1 :
+		    customPut ("Some time passes...", false)
+		label 6 :
+		    look
+		label 0 :
+		    customPut (noItem (myRandint), false)
+		label :
+		    noSecondInput
+	    end case
+	else
+	    customPut ("You cannot " + input, false)
+	end if
+    end if
+end doCommand
+
+look
+customPut ("", false)
+
+loop
+    getInput
+    doCommand
+    simulate
+    customPut ("", false)
+end loop

@@ -1,0 +1,32 @@
+name:zombie
+minimum attack:3
+maximum attack:6
+minimum defense:3
+maximum defense:5
+minimum health:5
+maximum health:10
+-----
+name:skeleton
+minimum attack:5
+maximum attack:10
+minimum defense:4
+maximum defense:8
+minimum health:5
+maximum health:15
+-----
+name:goblin
+minimum attack:3
+maximum attack:5
+minimum defense:4
+maximum defense:7
+minimum health:5
+maximum health:10
+-----
+name:spider
+minimum attack:5
+maximum attack:10
+minimum defense:4
+maximum defense:6
+minimum health:5
+maximum health:10
+-----

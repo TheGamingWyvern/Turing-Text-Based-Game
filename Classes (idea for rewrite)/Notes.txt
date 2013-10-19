@@ -1,0 +1,6 @@
+Create an instance of each class at the end of each class file and fill out the arrays in Public Variables to contain an instance of each class (i.e. existingItems (1) := itemSteelBoots)
+Alternatively, create only the pointer in each class file, then use:
+ new x
+ existingItems (1) :=x
+ free x
+Make sure the Public Variables.t file is included AFTER all classes in the main file
