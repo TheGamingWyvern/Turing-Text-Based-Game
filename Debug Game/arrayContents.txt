@@ -1,0 +1,164 @@
+What?
+Let me think about it.
+Let me get back to you.
+Are you high?
+I do not understand.
+...
+Let me get back to you on that.
+Would you like some help?
+Huh?
+I'm confused.
+Please. Take your time.
+Maybe I should help you.
+You're doing it wrong.
+*sigh*
+Come on, you can do it!
+It's only your time you're wasting.
+-----
+hold up
+sleep
+rest
+wait
+
+attack the
+kill
+hit
+attack
+
+take a
+take the
+pick up
+pick
+take
+
+drop the
+drop a
+put down
+remove
+drop
+
+look at the
+look at
+inspect the
+examine
+inspect
+
+look around
+look
+
+use a
+use the
+use
+consume
+consume a
+
+put on the
+put on
+equip a
+equip the
+equip
+
+go
+move
+travel
+walk
+run
+
+spawn
+-----
+sharp stick
+A medium sized sharpened stick. Good for killing rabits.
+2
+4
+bronze sword
+A common shortsword that could be forged by any blacksmith.
+4
+6
+steel sword
+A strong broadsword made of steel.
+6
+11
+-----
+wooden shield
+A weak shield made of wood.
+3
+5
+bronze shield
+A medium sized heater shield.
+4
+6
+steel shield
+A large, rounded shield. Great for defending yourself.
+7
+10
+-----
+iron helmet
+A medium helmet that covers most of the face.
+3
+3
+steel helmet
+A full helmet that covers the entire face.
+6
+6
+-----
+iron chestplate
+A small chestplate.
+5
+5
+steel chestplate
+"This is a really heavy piece of armor!"
+10
+10
+-----
+iron leggings
+Weak piece of leg armor.
+2
+2
+steel greaves
+A strong piece of leg armor.
+5
+5
+-----
+iron boots
+I recommend you don't go swimming with these...
+2
+2
+steel boots
+"These boots hardly even fit my feet!"
+5
+5
+-----
+potion of lesser healing
+A concoction of regenerative liquid stored in a small vial.
+15
+15
+potion of greater healing
+A stronger brew of regenerative liquid that is stored in a bottle.
+25
+25
+potion of poison
+A deadly brew of potion that will dispatch any man at a moments notice.
+-20
+-20
+-----
+north
+n
+south
+s
+east
+e
+west
+w
+up
+u
+down
+d
+forward
+n
+back
+s
+left
+w
+right
+e
+-----

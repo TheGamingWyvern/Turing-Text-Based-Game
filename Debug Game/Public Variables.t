@@ -37,21 +37,12 @@ var existingDirections : flexible array 1 .. numDirections of ^Direction
 var storedText : string := ""
 var uninitBoolean : int := 16#FF
 
-% The noun array stores all possible subjects for a command (ex. Items, Entities, etc.) so they can be accessed
-% in one for loop
-var numNoun := 0
-var noun : flexible array 1 .. numNoun of ^customClass
-
-% This is a simple way to avoid having a nil pointer error in the Add/DropItem procedures.
-var nothing : ^Item
-new nothing
-
 var BAG_SIZE : int := 10
 var inventorySlots : flexible array 1 .. BAG_SIZE of ^Item
 
 % Initializing all the inventory slots as nil.
 for i : 1 .. BAG_SIZE
-    inventorySlots (i) := nothing
+    new inventorySlots (i)
 end for
 
 var tempRoom : ^Room
@@ -104,64 +95,79 @@ var input : string := ""
 var resY : int
 resY := maxy
 
-var existingItems : array 1 .. 17 of ^Item
-
-%new existingItems (1)
+var existingItems : array 1 .. 14 of ^Item
 
 % syntax: existingItems(index) -> create(name : string, desc : string, type : string, minAttack : int,
 %   maxAttack : int, minDefense : int, maxDefense : int, dodgeChance : int, ability : action proc)
 
 % In the case of consumables, attack values is the healing property, or actual attack property
 % Example: Healing potion would have an attack value of, say, 10. It would heal the player
-
+new existingItems(1)
 existingItems (1) -> create ("sharp stick", "A medium sized sharpened stick.",
     "main hand", 2, 4, 0, 0, 0, nothing)
 
+new existingItems(2)
+
 existingItems (2) -> create ("bronze sword", "A common shortsword that could be forged by any blacksmith",
     "main hand", 4, 6, 0, 0, 0, nothing)
-
+    
+new existingItems(3)
 existingItems (3) -> create ("steel sword", "A strong broadsword made of steel.",
     "main hand", 6, 11, 0, 0, 0, nothing)
-
+    
+new existingItems(4)
 existingItems (4) -> create ("wooden shield", "A weak shield made of wood.",
     "off hand", 0, 0, 3, 5, 0, nothing)
-
+    
+new existingItems(5)
 existingItems (5) -> create ("bronze shield", "A medium sized heater shield.",
     "off hand", 0, 0, 4, 6, 0, nothing)
-
+    
+new existingItems(6)
 existingItems (6) -> create ("steel shield", "A large, rounded shield.",
     "off hand", 0, 0, 7, 10, 0, nothing)
-
+    
+new existingItems(7)
 existingItems (7) -> create ("iron helmet", "A medium helmet that covers most of the face.",
     "head", 0, 0, 3, 3, 0, nothing)
-
+    
+new existingItems(8)
 existingItems (8) -> create ("steel helmet", "A full helmet that covers the entire head.",
     "head", 0, 0, 6, 6, 0, nothing)
-
+    
+new existingItems(9)
 existingItems (9) -> create ("iron chestplate", "A small chestplate.",
     "body", 0, 0, 5, 5, 0, nothing)
-
+    
+new existingItems(10)
 existingItems (10) -> create ("steel chestplate", "\"This is a really heavy piece of armour!\"",
     "body", 0, 0, 10, 10, 0, nothing)
-
+    
+new existingItems(11)
 existingItems (11) -> create ("iron leggings", "A weak piece of leg armour.",
     "legs", 0, 0, 2, 2, 0, nothing)
-
+    
+new existingItems(12)
 existingItems (12) -> create ("steel greaves", "A strong piece of leg armour.",
     "legs", 0, 0, 5, 5, 0, nothing)
-
+    
+new existingItems(13)
 existingItems (13) -> create ("iron boots", "I recommend you don't go swimming with these...",
     "feet", 0, 0, 2, 2, 0, nothing)
-
+    
+new existingItems(14)
 existingItems (14) -> create ("steel boots", "\"These boots hardly fit my feet!\"",
     "feet", 0, 0, 5, 5, 0, nothing)
 
-/*existingItems (15) -> create ("potion of lesser healing",
+/*new existingItems(15)
+existingItems (15) -> create ("potion of lesser healing",
     "A concotion of regenerative liquid stored in a small vial.", "consumable", 15, 15, 0, 0, 0, heal)
 
+new existingItems(16)
 existingItems (16) -> create ("potion of greater healing",
     "A concotion of regenerative liquid stored in a bottle.", "consumable", 25, 25, 0, 0, 0, heal)
 
+new existingItems(17)
 existingItems (17) -> create ("potion of poison",
     "A deadly brew of potion that will dispatch any man at a moments notice.", "consumable", 0, 0, 0, 0, 0, poison)
 */

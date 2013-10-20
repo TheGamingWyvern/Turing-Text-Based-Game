@@ -1,12 +1,11 @@
 class Item
-    import Entity
     export getName, getDesc, getItemType,
 	getMinAtt, getMaxAtt, getMinDef,
 	getMaxDef, getDodgeBonus, create, ability
 
 
     var name, desc, itemType := ""
-    var ability : proc a (target : ^Entity, value : int)
+    var ability : proc a (target : string, value : int)
 
     var minAtt, maxAtt, minDef, maxDef, dodgeBonus : int := 0
 
@@ -44,7 +43,7 @@ class Item
 
     proc create (name_ : string, desc_ : string, itemType_ : string,
 	    minAtt_ : int, maxAtt_ : int, minDef_ : int, maxDef_ : int, dodgeBonus_ : int,
-	    ability_ : proc a (target : ^Entity, value : int))
+	    ability_ : proc a (target : string, value : int))
 	name := name_
 	desc := desc_
 	itemType := itemType_
