@@ -3,7 +3,6 @@ class Item
 	getMinAtt, getMaxAtt, getMinDef,
 	getMaxDef, getDodgeBonus, create, ability
 
-
     var name, desc, itemType := ""
     var ability : proc a (target : string, value : int)
 

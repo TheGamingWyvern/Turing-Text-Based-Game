@@ -42,12 +42,9 @@ loop
     end for
 end loop
 
-%%%%%%%%%%%%%%%%%%%  READ IN ALL ITEMS  %%%%%%%%%%%%%%%%%%%%%%%%%
-
 var tempDirection : ^Direction
 
 %%%%%%%%%%%%%%%%%%%  READ IN ALL DIRECTIONS  %%%%%%%%%%%%%%%%%%%%%%%%%
-
 loop
     new tempDirection
     get : textStorage, tempText : *

@@ -46,11 +46,13 @@ proc getInput
     for i : 1 .. upper (existingItems)
 	if index (input, existingItems (i) -> getName ()) not= 0 then
 
-	    requestedItem -> create (existingItems (i) -> getName (), existingItems (i) -> getDesc (),
-		existingItems (i) -> getItemType (),
-		existingItems (i) -> getMinAtt (), existingItems (i) -> getMaxAtt (), existingItems (i) -> getMinDef (),
-		existingItems (i) -> getMaxDef (), existingItems (i) -> getDodgeBonus (), existingItems (i) -> ability)
+	    requestedItem := existingItems (i)
 
+	    /*requestedItem -> create (existingItems (i) -> getName (), existingItems (i) -> getDesc (),
+	     existingItems (i) -> getItemType (),
+	     existingItems (i) -> getMinAtt (), existingItems (i) -> getMaxAtt (), existingItems (i) -> getMinDef (),
+	     existingItems (i) -> getMaxDef (), existingItems (i) -> getDodgeBonus (), existingItems (i) -> ability)
+	     */
 	    itemSubjects += 1
 	end if
     end for

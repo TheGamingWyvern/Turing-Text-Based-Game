@@ -1,12 +1,12 @@
 % Public Variables New
-% Obviously not finished.
 
-% main hand
-% off hand
-% head
-% body
-% legs
-% feet
+% Item Types:
+%  main hand
+%  off hand
+%  head
+%  body
+%  legs
+%  feet
 
 var tempText : string
 var tempInt : int := 1
@@ -101,13 +101,12 @@ var existingItems : array 1 .. 14 of ^Item
 %   maxAttack : int, minDefense : int, maxDefense : int, dodgeChance : int, ability : action proc)
 
 % In the case of consumables, attack values is the healing property, or actual attack property
-% Example: Healing potion would have an attack value of, say, 10. It would heal the player
+% Example: Healing potion would have an attack value of, say, 10. It would heal the player 10 health.
 new existingItems(1)
 existingItems (1) -> create ("sharp stick", "A medium sized sharpened stick.",
     "main hand", 2, 4, 0, 0, 0, nothing)
 
 new existingItems(2)
-
 existingItems (2) -> create ("bronze sword", "A common shortsword that could be forged by any blacksmith",
     "main hand", 4, 6, 0, 0, 0, nothing)
     
