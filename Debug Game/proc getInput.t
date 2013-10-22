@@ -27,6 +27,9 @@ proc getInput
 
     customPut (input, false)
 
+    % Searches the input to see if the command is valid,
+    %  then sets the command category so the program knows what
+    %  function or procedure to call.
     for i : 1 .. upper (commandArray, 1)
 	exit when command not= 0
 	for j : 1 .. upper (commandArray, 2)
@@ -38,10 +41,6 @@ proc getInput
 	    end if
 	end for
     end for
-    % Explanation of 'i' for loop
-    % Searches the input to see if the command is valid,
-    %  then sets the command category so the program knows what
-    %  function or procedure to call.
 
     for i : 1 .. upper (existingItems)
 	if index (input, existingItems (i) -> getName ()) not= 0 then

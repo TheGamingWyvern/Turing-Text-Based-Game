@@ -28,7 +28,6 @@ attack
 take a
 take the
 pick up
-pick
 take
 
 drop the
@@ -48,9 +47,10 @@ look
 
 use a
 use the
+consume a
 use
 consume
-consume a
+
 
 put on the
 put on

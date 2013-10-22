@@ -1,6 +1,7 @@
 open : textStorage, "arrayContents.txt", get
 
-% Reads in all the random messages for when the user enters a blank or unrecognizable data in the game.
+% Reads in all the random messages 
+%  for when the user enters a blank or unrecognizable data in the game.
 loop
     noItemSize += 1
     new noItem, noItemSize
