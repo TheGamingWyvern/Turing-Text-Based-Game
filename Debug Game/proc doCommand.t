@@ -11,7 +11,7 @@ proc doCommand
 		label 5 :
 		    inspectItem (requestedItem)
 		label 7 :
-		    consumeItem (requestedItem)
+		    consumeItem (requestedItem, requestedEntity)
 		label 8 :
 		    equipItems (requestedItem)
 		label :
@@ -43,6 +43,13 @@ proc doCommand
 		    customPut (noItem (myRandint), false)
 		label :
 		    noSecondInput
+	    end case
+
+	elsif requestedItem not= nil and requestedEntity not= nil and requestedDirection = nil then
+	    case command of
+		label 7 :
+		    consumeItem (requestedItem, requestedEntity)
+		label :
 	    end case
 	else
 	    customPut ("You cannot " + input, false)

@@ -1,8 +1,8 @@
-proc heal (target : string, value : int)
+body proc heal
     var targetEntity : ^Entity := nil
 
     if target = "" then
-	targetEntity = player
+	targetEntity := player
     else
 	for i : 1 .. upper (roomCoord (x, y, z) -> mobsInRoom)
 	    if roomCoord (x, y, z) -> mobsInRoom (i) -> name = target then
@@ -21,10 +21,11 @@ proc heal (target : string, value : int)
 
 	if targetEntity -> currentMobHealth > targetEntity -> maxMobHealth then
 	    targetEntity -> currentMobHealth := targetEntity -> maxMobHealth
-	    customPut ("You healed " + targetEntity -> name + " for " + differenceInHealth + " health.", false)
+	    customPut ("You healed " + targetEntity -> name + " for " + intstr(differenceInHealth) + " health.", false)
+	    return
 	end if
 
-	customPut ("You healed " + targetEntity -> name + " for " + value + " health.", false)
+	customPut ("You healed the " + targetEntity -> name + " for " + intstr(value) + " health.", false)
 	return
     end if
 end heal

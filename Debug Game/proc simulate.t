@@ -1,4 +1,4 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%  MAIN  %%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%  SIMULATE  %%%%%%%%%%%%%%%%%%%%%%%%%
 % Explanation
 % When the player does something, the mobs, and possibly other
 %  environment objects will have their turn to attack, or move.
@@ -9,3 +9,4 @@ proc simulate
 	end if
     end for
 end simulate
+

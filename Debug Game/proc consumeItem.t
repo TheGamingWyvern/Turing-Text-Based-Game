@@ -6,11 +6,20 @@
 % If you cannot be healed any further, then you will be told the item had no effect.
 % If the item is a poison or has a harmful effect, then the defined value will be deducted from your current health
 %  and the proper message will be displayed (You lost X health).
-proc consumeItem (itemToConsume : ^Item)
+proc consumeItem (itemToConsume : ^Item, targetEntity : ^Entity)
     for i : 1 .. upper (inventorySlots)
 	if inventorySlots (i) -> getName () = itemToConsume -> getName () then
-	    inventorySlots (i) -> ability ("", 0)
-	    return
+	    if targetEntity = nil then
+		inventorySlots (i) -> ability ("",
+		    Rand.Int (inventorySlots (i) -> getMinAtt (),
+		    inventorySlots (i) -> getMaxAtt ()))
+		return
+	    else
+		inventorySlots (i) -> ability (targetEntity -> name,
+		    Rand.Int (inventorySlots (i) -> getMinAtt (),
+		    inventorySlots (i) -> getMaxAtt ()))
+		return
+	    end if
 	end if
     end for
     customPut ("You do not have a " + itemToConsume -> getName () + ".", false)

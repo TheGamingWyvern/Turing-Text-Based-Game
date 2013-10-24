@@ -5,6 +5,9 @@ include "proc initializeScreen.t"
 initializeScreen ()
 
 forward proc customPut (userInput : string, continue : boolean)
+forward proc nothing (target : string, value : int)
+forward proc heal (target : string, value : int)
+forward proc poison (target : string, value : int)
 
 include "class CustomClass.t"
 include "class Item.t"
@@ -14,8 +17,11 @@ include "class Room.t"
 
 include "initializePlayer.t"
 
-include "proc ability.nothing.t"
 include "Public Variables.t"
+
+include "proc ability.nothing.t"
+include "proc ability.heal.t"
+include "proc ability.poison.t"
 
 include "Array Contents Initialization.t"
 include "Mob Initialization and Noun Array.t"
@@ -46,5 +52,5 @@ include "proc doCommand.t"
 include "proc runGame.t"
 include "proc menu.t"
 
-menu()
+menu ()
 runGame ()

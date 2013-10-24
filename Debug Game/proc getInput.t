@@ -36,7 +36,7 @@ proc getInput
 	    if index (input, commandArray (i, j)) = 1 and commandArray (i, j) not= "" then
 		command := i
 		inputMatch := j
-		input := input (length (commandArray (i, j)) + 1 .. length (input))
+		input := Str.Trim (input (length (commandArray (i, j)) + 1 .. length (input)))
 		exit
 	    end if
 	end for
@@ -53,15 +53,22 @@ proc getInput
 	     existingItems (i) -> getMaxDef (), existingItems (i) -> getDodgeBonus (), existingItems (i) -> ability)
 	     */
 	    itemSubjects += 1
+	    input := Str.Trim (input (length (existingItems (i) -> getName ()) + 1 .. length (input)))
 	end if
     end for
-    
+
+    if index (input, player -> name) not= 0 then
+	requestedEntity := player
+	entitySubjects+=1
+    end if
+
     for i : 1 .. upper (existingEntities)
 	if index (input, existingEntities (i) -> name) not= 0 then
 
 	    requestedEntity := existingEntities (i)
 
 	    entitySubjects += 1
+	    input := Str.Trim (input (length (existingEntities (i) -> name) + 1 .. length (input)))
 	end if
     end for
 
@@ -71,6 +78,7 @@ proc getInput
 	    requestedDirection := existingDirections (i)
 
 	    directionSubjects += 1
+	    input := Str.Trim (input (length (existingDirections (i) -> name) + 1 .. length (input)))
 	end if
     end for
 end getInput
