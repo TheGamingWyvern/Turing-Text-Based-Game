@@ -8,7 +8,7 @@
 %  and the proper message will be displayed (You lost X health).
 proc consumeItem (itemToConsume : ^Item)
     for i : 1 .. upper (inventorySlots)
-	if inventorySlots (i) = itemToConsume then
+	if inventorySlots (i) -> getName () = itemToConsume -> getName () then
 	    inventorySlots (i) -> ability ("", 0)
 	    return
 	end if

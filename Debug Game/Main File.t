@@ -1,4 +1,5 @@
-import GUI %for proc initializeScreen
+% for proc initializeScreen
+import GUI
 
 include "proc initializeScreen.t"
 initializeScreen ()

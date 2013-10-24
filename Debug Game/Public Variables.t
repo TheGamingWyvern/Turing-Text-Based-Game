@@ -107,7 +107,7 @@ existingItems (1) -> create ("sharp stick", "A medium sized sharpened stick.",
     "main hand", 2, 4, 0, 0, 0, nothing)
 
 new existingItems(2)
-existingItems (2) -> create ("bronze sword", "A common shortsword that could be forged by any blacksmith",
+existingItems (2) -> create ("bronze sword", "A common shortsword that could be forged by any blacksmith.",
     "main hand", 4, 6, 0, 0, 0, nothing)
     
 new existingItems(3)

@@ -10,7 +10,7 @@ proc equipItems (itemToEquip : ^Item)
 	if itemToEquip -> getName () = "" then
 	    noSecondInput
 	    return
-	elsif inventorySlots (i) = itemToEquip then
+	elsif inventorySlots (i) -> getName () = itemToEquip -> getName () then
 	    case itemToEquip -> getItemType () of
 		label "main hand" :
 		    if player -> mainHand not= nil then

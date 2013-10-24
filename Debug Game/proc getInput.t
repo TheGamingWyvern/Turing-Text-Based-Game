@@ -55,6 +55,7 @@ proc getInput
 	    itemSubjects += 1
 	end if
     end for
+    
     for i : 1 .. upper (existingEntities)
 	if index (input, existingEntities (i) -> name) not= 0 then
 
