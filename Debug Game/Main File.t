@@ -4,14 +4,18 @@ import GUI
 include "proc initializeScreen.t"
 initializeScreen ()
 
-forward proc customPut (userInput : string, continue : boolean)
-forward proc nothing (target : string, value : int)
-forward proc heal (target : string, value : int)
-forward proc poison (target : string, value : int)
-
-include "class CustomClass.t"
 include "class Item.t"
+
+forward proc customPut (userInput : string, continue : boolean)
+forward proc nothing (target : string, usedItem : ^Item)
+forward proc heal (target : string, usedItem : ^Item)
+forward proc poison (target : string, usedItem : ^Item)
+
 include "class Entity.t"
+
+forward proc mobNothing (target : ^Entity, caster : ^Entity)
+forward proc mobPoison (target : ^Entity, caster : ^Entity)
+
 include "class Direction.t"
 include "class Room.t"
 
@@ -23,8 +27,10 @@ include "proc ability.nothing.t"
 include "proc ability.heal.t"
 include "proc ability.poison.t"
 
+include "proc ability.mobNothing.t"
+include "proc ability.mobPoison.t"
+
 include "Array Contents Initialization.t"
-include "Mob Initialization and Noun Array.t"
 
 include "fcn makeUppercase.t"
 include "proc drawCharacter.t"

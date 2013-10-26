@@ -28,9 +28,6 @@ end for
 
 var convert : string
 
-var numEntities : int := 0
-var existingEntities : flexible array 1 .. numEntities of ^Entity
-
 var numDirections : int := 0
 var existingDirections : flexible array 1 .. numDirections of ^Direction
 
@@ -96,6 +93,21 @@ var resY : int
 resY := maxy
 
 var existingItems : array 1 .. 17 of ^Item
+var existingEntities : array 1 .. 4 of ^Entity
+
+% syntax: existingEntities(index) -> create(name : string, minAtt, maxAtt, minDef, maxDef,
+%   currentHP, maxHP, dodgeChance : int, ability : action proc)
+new existingEntities(1)
+existingEntities (1) -> create ("zombie", 3, 6, 3, 5, 10, 10, 1, mobNothing)
+
+new existingEntities(2)
+existingEntities (2) -> create ("skeleton", 5, 10, 4, 8, 15, 15, 1, mobNothing)
+
+new existingEntities(3)
+existingEntities (3) -> create ("goblin", 3, 5, 4, 7, 10, 10, 2, mobNothing)
+
+new existingEntities(4)
+existingEntities (4) -> create ("spider", 5, 10, 4, 6, 15, 15, 3, mobNothing)
 
 % syntax: existingItems(index) -> create(name : string, desc : string, type : string, minAttack : int,
 %   maxAttack : int, minDefense : int, maxDefense : int, dodgeChance : int, ability : action proc)

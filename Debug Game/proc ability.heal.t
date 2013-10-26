@@ -1,5 +1,6 @@
 body proc heal
     var targetEntity : ^Entity := nil
+    var value : int := Rand.Int (usedItem -> getMinAtt(), usedItem -> getMaxAtt())
 
     if target = "" then
 	targetEntity := player
@@ -21,11 +22,11 @@ body proc heal
 
 	if targetEntity -> currentMobHealth > targetEntity -> maxMobHealth then
 	    targetEntity -> currentMobHealth := targetEntity -> maxMobHealth
-	    customPut ("You healed " + targetEntity -> name + " for " + intstr(differenceInHealth) + " health.", false)
+	    customPut ("You healed " + targetEntity -> name + " for " + intstr (differenceInHealth) + " health.", false)
 	    return
 	end if
 
-	customPut ("You healed the " + targetEntity -> name + " for " + intstr(value) + " health.", false)
+	customPut ("You healed the " + targetEntity -> name + " for " + intstr (value) + " health.", false)
 	return
     end if
 end heal

@@ -4,7 +4,7 @@
 %  environment objects will have their turn to attack, or move.
 proc simulate
     for i : 1 .. upper (roomCoord (x, y, z) -> mobsInRoom)
-	if roomCoord (x, y, z) -> mobsInRoom (i) not= nil then
+	if roomCoord (x, y, z) -> mobsInRoom (i) -> name not= "" then
 	    damage (roomCoord (x, y, z) -> mobsInRoom (i), player)
 	end if
     end for

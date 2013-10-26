@@ -3,8 +3,8 @@ class Item
 	getMinAtt, getMaxAtt, getMinDef,
 	getMaxDef, getDodgeBonus, create, ability
 
-    var name, desc, itemType := ""
-    var ability : proc a (target : string, value : int)
+    var name, desc, itemType : string := ""
+    var ability : proc a (target : string, usedItem : ^Item)
 
     var minAtt, maxAtt, minDef, maxDef, dodgeBonus : int := 0
 
@@ -42,7 +42,8 @@ class Item
 
     proc create (name_ : string, desc_ : string, itemType_ : string,
 	    minAtt_ : int, maxAtt_ : int, minDef_ : int, maxDef_ : int, dodgeBonus_ : int,
-	    ability_ : proc a (target : string, value : int))
+	    ability_ : proc a (target : string, usedItem : ^Item))
+
 	name := name_
 	desc := desc_
 	itemType := itemType_

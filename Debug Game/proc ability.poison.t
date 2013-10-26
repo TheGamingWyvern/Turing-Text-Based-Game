@@ -1,5 +1,6 @@
 body proc poison
     var targetEntity : ^Entity := nil
+    var value : int := Rand.Int (usedItem -> getMinAtt (), usedItem -> getMaxAtt ())
 
     if target = "" then
 	for i : 1 .. upper (roomCoord (x, y, z) -> mobsInRoom)
@@ -26,11 +27,11 @@ body proc poison
 
 	if targetEntity -> currentMobHealth < 0 then
 	    customPut ("The " + targetEntity -> name + " has died.", false)
-	    targetEntity := nil
+	    targetEntity -> reset
 	    return
 	end if
 
-	customPut ("You dealt the " + targetEntity -> name + " " + intstr(value) + " poison damage.", false)
+	customPut ("You dealt the " + targetEntity -> name + " " + intstr (value) + " poison damage.", false)
 	return
     end if
 end poison

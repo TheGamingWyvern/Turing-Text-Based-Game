@@ -24,15 +24,15 @@ proc dropItem (itemToDrop : ^Item)
     for i : 1 .. upper (inventorySlots)
 	case itemToDrop -> getName () (length (itemToDrop -> getName ())) of
 	    label "s" :
-		customPut (" " + itemToDrop -> getName () + " in your backpack.", true)
+		customPut (" " + itemToDrop -> getName () + " in your backpack.", false)
 		return
 	    label :
 		case itemToDrop -> getName () (1) of
 		    label "a", "e", "i", "o", "u" :
-			customPut (" an " + itemToDrop -> getName () + " in your backpack.", true)
+			customPut (" an " + itemToDrop -> getName () + " in your backpack.", false)
 			return
 		    label :
-			customPut (" a " + itemToDrop -> getName () + " in your backpack.", true)
+			customPut (" a " + itemToDrop -> getName () + " in your backpack.", false)
 			return
 		end case
 	end case

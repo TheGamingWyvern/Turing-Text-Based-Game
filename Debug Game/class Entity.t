@@ -1,14 +1,70 @@
-% This class is for any enemy (and the player) in the game. 
+% This class is for any enemy (and the player) in the game.
 % Contains armor slots, health, attack, etc.
 class Entity
-    inherit customClass
     import Item
     export var all
-    
-    var mainHand, offHand, head, torso, legs, feet : ^Item := nil
-    var minAttackValue, maxAttackValue : int := 0
-    var minDefenseValue, maxDefenseValue : int := 0
-    
-    var minHealthValue, maxHealthValue : int := 0
+
+    var name : string := ""
+    var currentHP, maxHP : int := 0
+    var mainHand, offHand, head, torso, legs, feet : ^Item
+    var ability : proc a (target : ^Entity, caster : ^Entity)
+    var dodgeBonus : int := 0
+
+    new head
+    new torso
+    new legs
+    new feet
+    new mainHand
+    new offHand
+
+    var minAtt, maxAtt : int := 0
+    var minDef, maxDef : int := 0
+
     var currentMobHealth, maxMobHealth : int := 0
+
+    proc reset
+
+	name := ""
+
+	minAtt := 0
+	maxAtt := 0
+	minDef := 0
+	maxDef := 0
+
+	currentHP := 0
+	maxHP := 0
+
+	free head
+	new head
+
+	free torso
+	new torso
+
+	free legs
+	new legs
+
+	free feet
+	new feet
+
+	free mainHand
+	new mainHand
+
+	free offHand
+	new offHand
+
+    end reset
+
+    proc create (name_ : string, minAtt_, maxAtt_, minDef_, maxDef_,
+	    currentHP_, maxHP_, dodgeBonus_ : int, ability_ : proc a (target : ^Entity, caster : ^Entity))
+
+	name := name_
+	minAtt := minAtt_
+	maxAtt := maxAtt_
+	minDef := minDef_
+	maxDef := maxDef_
+	currentHP:= currentHP_
+	maxHP := maxHP_
+	dodgeBonus := dodgeBonus_
+	ability := ability_
+    end create
 end Entity

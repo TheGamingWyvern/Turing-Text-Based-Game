@@ -12,8 +12,8 @@ class Room
     var eastDoor, westDoor, northDoor, southDoor, upStair, downStair : boolean
 
     for i : 1 .. 20
-	mobsInRoom (i) := nil
-	itemsInRoom (i) := nil
+	new mobsInRoom (i)
+	new itemsInRoom (i)
 	environmentSettings (i) := ""
     end for
 

@@ -10,14 +10,10 @@ proc consumeItem (itemToConsume : ^Item, targetEntity : ^Entity)
     for i : 1 .. upper (inventorySlots)
 	if inventorySlots (i) -> getName () = itemToConsume -> getName () then
 	    if targetEntity = nil then
-		inventorySlots (i) -> ability ("",
-		    Rand.Int (inventorySlots (i) -> getMinAtt (),
-		    inventorySlots (i) -> getMaxAtt ()))
+		inventorySlots (i) -> ability ("", inventorySlots (i))
 		return
 	    else
-		inventorySlots (i) -> ability (targetEntity -> name,
-		    Rand.Int (inventorySlots (i) -> getMinAtt (),
-		    inventorySlots (i) -> getMaxAtt ()))
+		inventorySlots (i) -> ability (targetEntity -> name, inventorySlots (i))
 		return
 	    end if
 	end if
