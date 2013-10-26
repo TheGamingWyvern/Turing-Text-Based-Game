@@ -1,8 +1,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%  RANDOM GENERATION  %%%%%%%%%%%%%%%%%%%%%%%%%
 proc randomGen
     if roomCoord (x, y, z) = nil then
-	new tempRoom
-	roomCoord (x, y, z) := tempRoom
+	new roomCoord (x, y, z)
 
 	if Rand.Int (0, 1) = 0 then
 	    roomCoord (x, y, z) -> northDoor := false
@@ -42,9 +41,7 @@ proc randomGen
 
 	if x - 1 >= lower (roomCoord, 1) then
 	    if roomCoord (x - 1, y, z) not= nil then
-		if #roomCoord (x - 1, y, z) -> eastDoor not= uninitBoolean then
-		    roomCoord (x, y, z) -> westDoor := roomCoord (x - 1, y, z) -> eastDoor
-		end if
+		roomCoord (x, y, z) -> westDoor := roomCoord (x - 1, y, z) -> eastDoor
 	    end if
 	else
 	    roomCoord (x, y, z) -> westDoor := false
@@ -52,9 +49,7 @@ proc randomGen
 
 	if x + 1 <= upper (roomCoord, 1) then
 	    if roomCoord (x + 1, y, z) not= nil then
-		if #roomCoord (x + 1, y, z) -> westDoor not= uninitBoolean then
-		    roomCoord (x, y, z) -> eastDoor := roomCoord (x + 1, y, z) -> westDoor
-		end if
+		roomCoord (x, y, z) -> eastDoor := roomCoord (x + 1, y, z) -> westDoor
 	    end if
 	else
 	    roomCoord (x, y, z) -> eastDoor := false
@@ -62,9 +57,7 @@ proc randomGen
 
 	if y - 1 >= lower (roomCoord, 2) then
 	    if roomCoord (x, y - 1, z) not= nil then
-		if #roomCoord (x, y - 1, z) -> upStair not= uninitBoolean then
-		    roomCoord (x, y, z) -> downStair := roomCoord (x, y - 1, z) -> upStair
-		end if
+		roomCoord (x, y, z) -> downStair := roomCoord (x, y - 1, z) -> upStair
 	    end if
 	else
 	    roomCoord (x, y, z) -> downStair := false
@@ -72,9 +65,7 @@ proc randomGen
 
 	if y + 1 <= upper (roomCoord, 2) then
 	    if roomCoord (x, y + 1, z) not= nil then
-		if #roomCoord (x, y + 1, z) -> downStair not= uninitBoolean then
-		    roomCoord (x, y, z) -> upStair := roomCoord (x, y + 1, z) -> downStair
-		end if
+		roomCoord (x, y, z) -> upStair := roomCoord (x, y + 1, z) -> downStair
 	    end if
 	else
 	    roomCoord (x, y, z) -> upStair := false
@@ -82,9 +73,7 @@ proc randomGen
 
 	if z - 1 >= lower (roomCoord, 3) then
 	    if roomCoord (x, y, z - 1) not= nil then
-		if #roomCoord (x, y, z - 1) -> northDoor not= uninitBoolean then
-		    roomCoord (x, y, z) -> southDoor := roomCoord (x, y, z - 1) -> northDoor
-		end if
+		roomCoord (x, y, z) -> southDoor := roomCoord (x, y, z - 1) -> northDoor
 	    end if
 	else
 	    roomCoord (x, y, z) -> southDoor := false
@@ -92,9 +81,7 @@ proc randomGen
 
 	if z + 1 <= upper (roomCoord, 3) then
 	    if roomCoord (x, y, z + 1) not= nil then
-		if #roomCoord (x, y, z + 1) -> southDoor not= uninitBoolean then
-		    roomCoord (x, y, z) -> northDoor := roomCoord (x, y, z + 1) -> southDoor
-		end if
+		roomCoord (x, y, z) -> northDoor := roomCoord (x, y, z + 1) -> southDoor
 	    end if
 	else
 	    roomCoord (x, y, z) -> northDoor := false

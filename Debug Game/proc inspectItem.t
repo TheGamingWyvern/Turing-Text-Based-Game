@@ -4,6 +4,7 @@
 %  and then display its description.
 % Like drop and add, if the item is not there, the program will tell you that you do not have it.
 proc inspectItem (itemToInspect : ^Item)
+    var tempText : string
     for i : 1 .. upper (inventorySlots)
 	if inventorySlots (i) -> getName () = itemToInspect -> getName () then
 	    tempText := makeUppercase (inventorySlots (i) -> getName ())

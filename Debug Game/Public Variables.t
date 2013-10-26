@@ -8,42 +8,15 @@
 %  legs
 %  feet
 
-var tempText : string
-var tempInt : int := 1
-var textStorage : int
-
-% noItem is for the error messages from the txt
-var noItemSize : int := 0
-var noItem : flexible array 1 .. noItemSize of string
-var numCommands : int := 0
-var commandArray : flexible array 1 .. numCommands, 1 .. 5 of string
-
-var previousTextStart : int := 1
-var previousTextEnd : int := maxrow - 6
-var previousTextLocation : int
-var previousText : array 1 .. (maxrow - 6) of string
-for i : 1 .. (maxrow - 6)
-    previousText (i) := ""
-end for
-
-var convert : string
-
-var numDirections : int := 0
-var existingDirections : flexible array 1 .. numDirections of ^Direction
-
 var storedText : string := ""
-var uninitBoolean : int := 16#FF
 
 var BAG_SIZE : int := 10
 var inventorySlots : flexible array 1 .. BAG_SIZE of ^Item
 
-% Initializing all the inventory slots as nil.
+% Initializing all the inventory slots.
 for i : 1 .. BAG_SIZE
     new inventorySlots (i)
 end for
-
-var tempRoom : ^Room
-new tempRoom
 
 % By default, when the user presses the up arrow key, it will use the look command.
 var numInputs : int := 1
@@ -64,20 +37,14 @@ for i : lower (roomCoord, 1) .. upper (roomCoord, 1)
     end for
 end for
 
-% Stores the rooms in tempRoom
-roomCoord (x, y, z) := tempRoom
-
 % The first room will always have doors in all directions, except for up and down
+new roomCoord (x, y, z) 
 roomCoord (x, y, z) -> northDoor := true
 roomCoord (x, y, z) -> eastDoor := true
 roomCoord (x, y, z) -> southDoor := true
 roomCoord (x, y, z) -> westDoor := true
 roomCoord (x, y, z) -> upStair := true
 roomCoord (x, y, z) -> downStair := false
-
-var command := 0
-var inputMatch := 0
-var myRandint : int
 
 var itemSubjects : int := 0
 var entitySubjects : int := 0
@@ -89,25 +56,151 @@ var requestedDirection : ^Direction := nil
 
 var input : string := ""
 
-var resY : int
-resY := maxy
+var previousTextStart : int := 1
+var previousTextEnd : int := maxrow - 6
+var previousTextLocation : int
+var previousText : array 1 .. (maxrow - 6) of string
+for i : 1 .. (maxrow - 6)
+    previousText (i) := ""
+end for
 
-var existingItems : array 1 .. 17 of ^Item
+
+% noItem is for the error messages from the txt
+var noItem : array 1 .. 16 of string
+
+noItem (1) := "What?"
+noItem (2) := "Let me think about it."
+noItem (3) := "Let me get back to you."
+noItem (4) := "Are you high?"
+noItem (5) := "I do not understand."
+noItem (6) := "..."
+noItem (7) := "Let me get back to you on that."
+noItem (8) := "Would you like some help?"
+noItem (9) := "Huh?"
+noItem (10) := "I'm confused."
+noItem (11) := "Please. Take your time."
+noItem (12) := "Maybe I should help you."
+noItem (13) := "You're doing it wrong."
+noItem (14) := "*sigh*"
+noItem (15) := "Come on, you can do it!"
+noItem (16) := "It's only your time you're wasting."
+
+
+var commandArray : array 1 .. 10, 1 .. 5 of string
+
+commandArray (1, 1) := "hold up"
+commandArray (1, 2) := "sleep"
+commandArray (1, 3) := "rest"
+commandArray (1, 4) := "wait"
+commandArray (1, 5) := ""
+
+commandArray (2, 1) := "attack the"
+commandArray (2, 2) := "kill"
+commandArray (2, 3) := "hit"
+commandArray (2, 4) := "attack"
+commandArray (2, 5) := ""
+
+commandArray (3, 1) := "take a"
+commandArray (3, 2) := "take the"
+commandArray (3, 3) := "pick up"
+commandArray (3, 4) := "take"
+commandArray (3, 5) := ""
+
+commandArray (4, 1) := "drop the"
+commandArray (4, 2) := "drop a"
+commandArray (4, 3) := "put down"
+commandArray (4, 4) := "remove"
+commandArray (4, 5) := "drop"
+
+commandArray (5, 1) := "look at the"
+commandArray (5, 2) := "look"
+commandArray (5, 3) := "inspect the"
+commandArray (5, 4) := "examine"
+commandArray (5, 5) := "inspect"
+
+commandArray (6, 1) := "look around"
+commandArray (6, 2) := "look"
+commandArray (6, 3) := ""
+commandArray (6, 4) := ""
+commandArray (6, 5) := ""
+
+commandArray (7, 1) := "use a"
+commandArray (7, 2) := "use the"
+commandArray (7, 3) := "consume a"
+commandArray (7, 4) := "use"
+commandArray (7, 5) := "consume"
+
+commandArray (8, 1) := "put on the"
+commandArray (8, 2) := "put on"
+commandArray (8, 3) := "equip a"
+commandArray (8, 4) := "equip the"
+commandArray (8, 5) := "equip"
+
+commandArray (9, 1) := "go"
+commandArray (9, 2) := "move"
+commandArray (9, 3) := "travel"
+commandArray (9, 4) := "walk"
+commandArray (9, 5) := "run"
+
+commandArray (10, 1) := "spawn"
+commandArray (10, 2) := ""
+commandArray (10, 3) := ""
+commandArray (10, 4) := ""
+commandArray (10, 5) := ""
+
+
+var existingDirections : flexible array 1 .. 10 of ^Direction
+
+new existingDirections (1)
+existingDirections (1) -> name := "north"
+existingDirections (1) -> userDirection := "n"
+new existingDirections (2)
+existingDirections (2) -> name := "forward"
+existingDirections (2) -> userDirection := "n"
+new existingDirections (3)
+existingDirections (3) -> name := "south"
+existingDirections (3) -> userDirection := "s"
+new existingDirections (4)
+existingDirections (4) -> name := "back"
+existingDirections (4) -> userDirection := "s"
+new existingDirections (5)
+existingDirections (5) -> name := "east"
+existingDirections (5) -> userDirection := "e"
+new existingDirections (6)
+existingDirections (6) -> name := "right"
+existingDirections (6) -> userDirection := "e"
+new existingDirections (7)
+existingDirections (7) -> name := "west"
+existingDirections (7) -> userDirection := "w"
+new existingDirections (8)
+existingDirections (8) -> name := "left"
+existingDirections (8) -> userDirection := "w"
+new existingDirections (9)
+existingDirections (9) -> name := "up"
+existingDirections (9) -> userDirection := "u"
+new existingDirections (10)
+existingDirections (10) -> name := "down"
+existingDirections (10) -> userDirection := "d"
+
+
 var existingEntities : array 1 .. 4 of ^Entity
 
 % syntax: existingEntities(index) -> create(name : string, minAtt, maxAtt, minDef, maxDef,
 %   currentHP, maxHP, dodgeChance : int, ability : action proc)
-new existingEntities(1)
+new existingEntities (1)
 existingEntities (1) -> create ("zombie", 3, 6, 3, 5, 10, 10, 1, mobNothing)
 
-new existingEntities(2)
+new existingEntities (2)
 existingEntities (2) -> create ("skeleton", 5, 10, 4, 8, 15, 15, 1, mobNothing)
 
-new existingEntities(3)
+new existingEntities (3)
 existingEntities (3) -> create ("goblin", 3, 5, 4, 7, 10, 10, 2, mobNothing)
 
-new existingEntities(4)
+new existingEntities (4)
 existingEntities (4) -> create ("spider", 5, 10, 4, 6, 15, 15, 3, mobNothing)
+
+
+var existingItems : array 1 .. 17 of ^Item
 
 % syntax: existingItems(index) -> create(name : string, desc : string, type : string, minAttack : int,
 %   maxAttack : int, minDefense : int, maxDefense : int, dodgeChance : int, ability : action proc)

@@ -4,10 +4,7 @@
 %  from your inventory and put it in the room.
 % If you don't have the item you asked to drop, the program will tell you that you do not have it.
 proc dropItem (itemToDrop : ^Item)
-    if itemToDrop -> getName () = "" then
-	noSecondInput
-	return
-    else
+
 	for i : 1 .. 10
 	    if inventorySlots (i) -> getName () = itemToDrop -> getName () then
 		customPut ("You dropped the " + inventorySlots (i) -> getName (), false)
@@ -17,7 +14,7 @@ proc dropItem (itemToDrop : ^Item)
 		return
 	    end if
 	end for
-    end if
+
 
     customPut ("You do not have", true)
 

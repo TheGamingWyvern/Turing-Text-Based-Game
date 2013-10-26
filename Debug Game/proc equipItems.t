@@ -7,10 +7,7 @@
 %  it cannot be equipped.
 proc equipItems (itemToEquip : ^Item)
     for i : 1 .. upper (inventorySlots)
-	if itemToEquip -> getName () = "" then
-	    noSecondInput
-	    return
-	elsif inventorySlots (i) -> getName () = itemToEquip -> getName () then
+	if inventorySlots (i) -> getName () = itemToEquip -> getName () then
 	    case itemToEquip -> getItemType () of
 		label "main hand" :
 		    if player -> mainHand not= nil then

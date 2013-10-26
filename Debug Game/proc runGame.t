@@ -4,7 +4,6 @@ proc runGame
 
     loop
 	getInput
-	doCommand
 	simulate
 	customPut ("", false)
     end loop

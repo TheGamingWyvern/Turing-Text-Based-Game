@@ -1,4 +1,4 @@
-proc doCommand
+proc doCommand (command, inputMatch :int)
     if itemSubjects > 1 or entitySubjects > 1 or directionSubjects > 1 then
 	customPut ("Too many subjects to satisfy the input command.", false)
     else
@@ -40,9 +40,9 @@ proc doCommand
 		label 6 :
 		    look
 		label 0 :
-		    customPut (noItem (myRandint), false)
+		    customPut (noItem (Rand.Int (1,16)), false)
 		label :
-		    noSecondInput
+		    noSecondInput (command, inputMatch)
 	    end case
 
 	elsif requestedItem not= nil and requestedEntity not= nil and requestedDirection = nil then

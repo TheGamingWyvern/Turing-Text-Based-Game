@@ -1,6 +1,6 @@
 proc getInput
-    command := 0
-    inputMatch := 0
+    var command := 0
+    var inputMatch := 0
 
     itemSubjects := 0
     entitySubjects := 0
@@ -9,8 +9,6 @@ proc getInput
     requestedItem := nil
     requestedEntity := nil
     requestedDirection := nil
-
-    randint (myRandint, 1, 16)
 
     var requestedMob : ^Entity
 
@@ -81,4 +79,6 @@ proc getInput
 	    input := Str.Trim (input (length (existingDirections (i) -> name) + 1 .. length (input)))
 	end if
     end for
+    
+    doCommand (command, inputMatch)
 end getInput

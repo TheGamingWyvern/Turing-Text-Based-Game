@@ -3,6 +3,8 @@
 % Displays all items in the inventory on the right side of the screen
 %  that is seperate from the main game text box.
 proc displayInventory
+    var tempText : string
+    var convert : string
     locate ((maxrow - 33), (maxcol * 2 div 3 + 3))
     put "INVENTORY"
 

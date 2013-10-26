@@ -30,8 +30,6 @@ include "proc ability.poison.t"
 include "proc ability.mobNothing.t"
 include "proc ability.mobPoison.t"
 
-include "Array Contents Initialization.t"
-
 include "fcn makeUppercase.t"
 include "proc drawCharacter.t"
 include "proc addText.t"
@@ -53,8 +51,8 @@ include "proc attack.t"
 include "proc randomGen.t"
 include "proc movement.t"
 include "proc simulate.t"
-include "proc getInput.t"
 include "proc doCommand.t"
+include "proc getInput.t"
 include "proc runGame.t"
 include "proc menu.t"
 

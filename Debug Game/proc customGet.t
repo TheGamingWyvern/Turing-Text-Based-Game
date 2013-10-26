@@ -4,7 +4,7 @@
 % This function's sole purpose is to enable the quick-command feature with the up arrow key.
 % It also makes all makes all capital letters lowercase.
 function customGet () : string
-    tempText := ""
+    var tempText : string := ""
     var inputKey : string (1)
     var numArrowKey : int := numInputs + 1
 
