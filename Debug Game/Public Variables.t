@@ -37,8 +37,8 @@ for i : lower (roomCoord, 1) .. upper (roomCoord, 1)
     end for
 end for
 
-% The first room will always have doors in all directions, except for up and down
-new roomCoord (x, y, z) 
+% The first room will always have doors in all directions, except for down
+new roomCoord (x, y, z)
 roomCoord (x, y, z) -> northDoor := true
 roomCoord (x, y, z) -> eastDoor := true
 roomCoord (x, y, z) -> southDoor := true
@@ -154,30 +154,38 @@ var existingDirections : flexible array 1 .. 10 of ^Direction
 new existingDirections (1)
 existingDirections (1) -> name := "north"
 existingDirections (1) -> userDirection := "n"
+
 new existingDirections (2)
 existingDirections (2) -> name := "forward"
 existingDirections (2) -> userDirection := "n"
+
 new existingDirections (3)
 existingDirections (3) -> name := "south"
 existingDirections (3) -> userDirection := "s"
 new existingDirections (4)
 existingDirections (4) -> name := "back"
 existingDirections (4) -> userDirection := "s"
+
 new existingDirections (5)
 existingDirections (5) -> name := "east"
 existingDirections (5) -> userDirection := "e"
+
 new existingDirections (6)
 existingDirections (6) -> name := "right"
 existingDirections (6) -> userDirection := "e"
+
 new existingDirections (7)
 existingDirections (7) -> name := "west"
 existingDirections (7) -> userDirection := "w"
+
 new existingDirections (8)
 existingDirections (8) -> name := "left"
 existingDirections (8) -> userDirection := "w"
+
 new existingDirections (9)
 existingDirections (9) -> name := "up"
 existingDirections (9) -> userDirection := "u"
+
 new existingDirections (10)
 existingDirections (10) -> name := "down"
 existingDirections (10) -> userDirection := "d"
