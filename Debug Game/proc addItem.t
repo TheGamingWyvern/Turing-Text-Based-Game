@@ -5,7 +5,7 @@
 % The program will only add items in the next available slot.
 proc addItem (itemToAdd : ^Item)
     if inventorySlots (10) -> getName () not= "" then
-	customPut ("Your inventory is full.", false)
+	customPut ("Your inventory is full.")
 	return
     else
 	for i : 1 .. upper (inventorySlots)
@@ -14,10 +14,10 @@ proc addItem (itemToAdd : ^Item)
 		    itemToAdd -> getItemType (),
 		    itemToAdd -> getMinAtt (), itemToAdd -> getMaxAtt (), itemToAdd -> getMinDef (),
 		    itemToAdd -> getMaxDef (), itemToAdd -> getDodgeBonus (), itemToAdd -> ability)
-		customPut ("You took the " + itemToAdd -> getName () + ".", false)
+		customPut ("You took the " + itemToAdd -> getName () + ".")
 		return
 	    end if
 	end for
     end if
-    customPut ("There is no " + itemToAdd -> getName () + " here.", false)
+    customPut ("There is no " + itemToAdd -> getName () + " here.")
 end addItem

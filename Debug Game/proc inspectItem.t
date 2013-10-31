@@ -8,25 +8,25 @@ proc inspectItem (itemToInspect : ^Item)
     for i : 1 .. upper (inventorySlots)
 	if inventorySlots (i) -> getName () = itemToInspect -> getName () then
 	    tempText := makeUppercase (inventorySlots (i) -> getName ())
-	    customPut (tempText + ": " + inventorySlots (i) -> getDesc (), false)
+	    customPut (tempText + ": " + inventorySlots (i) -> getDesc ())
 	    return
 	end if
     end for
 
-    customPut ("You do not have", true)
+    storeText ("You do not have")
 
     for i : 1 .. upper (inventorySlots)
 	case itemToInspect -> getName () (length (itemToInspect -> getName ())) of
 	    label "s" :
-		customPut (" " + itemToInspect -> getName () + " in your backpack.", false)
+		customPut (" " + itemToInspect -> getName () + " in your backpack.")
 		return
 	    label :
 		case itemToInspect -> getName () (1) of
 		    label "a", "e", "i", "o", "u" :
-			customPut (" an " + itemToInspect -> getName () + " in your backpack.", false)
+			customPut (" an " + itemToInspect -> getName () + " in your backpack.")
 			return
 		    label :
-			customPut (" a " + itemToInspect -> getName () + " in your backpack.", false)
+			customPut (" a " + itemToInspect -> getName () + " in your backpack.")
 			return
 		end case
 	end case

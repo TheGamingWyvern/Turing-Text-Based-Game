@@ -14,7 +14,7 @@ proc movement (directionToMove : ^Direction)
 		    z += 1
 		end if
 	    else
-		customPut ("There is no exit " + directionToMove -> name + ".", false)
+		customPut ("There is no exit " + directionToMove -> name + ".")
 		return
 	    end if
 	label "s" :
@@ -23,7 +23,7 @@ proc movement (directionToMove : ^Direction)
 		    z -= 1
 		end if
 	    else
-		customPut ("There is no exit " + directionToMove -> name + ".", false)
+		customPut ("There is no exit " + directionToMove -> name + ".")
 		return
 	    end if
 	label "e" :
@@ -32,7 +32,7 @@ proc movement (directionToMove : ^Direction)
 		    x += 1
 		end if
 	    else
-		customPut ("There is no exit " + directionToMove -> name + ".", false)
+		customPut ("There is no exit " + directionToMove -> name + ".")
 		return
 	    end if
 	label "w" :
@@ -41,7 +41,7 @@ proc movement (directionToMove : ^Direction)
 		    x -= 1
 		end if
 	    else
-		customPut ("There is no exit " + directionToMove -> name + ".", false)
+		customPut ("There is no exit " + directionToMove -> name + ".")
 		return
 	    end if
 	label "u" :
@@ -50,7 +50,7 @@ proc movement (directionToMove : ^Direction)
 		    y += 1
 		end if
 	    else
-		customPut ("There is no exit " + directionToMove -> name + ".", false)
+		customPut ("There is no exit " + directionToMove -> name + ".")
 		return
 	    end if
 	label "d" :
@@ -59,12 +59,12 @@ proc movement (directionToMove : ^Direction)
 		    y -= 1
 		end if
 	    else
-		customPut ("There is no exit " + directionToMove -> name + ".", false)
+		customPut ("There is no exit " + directionToMove -> name + ".")
 		return
 	    end if
 	label :
     end case
     randomGen
-    customPut ("You moved " + directionToMove -> name + ".", false)
+    customPut ("You moved " + directionToMove -> name + ".")
     look
 end movement

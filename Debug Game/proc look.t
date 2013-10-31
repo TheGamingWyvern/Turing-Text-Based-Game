@@ -7,86 +7,86 @@
 % If the item happens to be plural (irom greaves, sticks) then the program will omit "an" and "a"
 %  ("You see iron greaves here.", instead of, "You see a iron greaves here.")
 proc look
-    customPut ("You see", true)
+    storeText ("You see")
     for i : 1 .. (upper (existingItems))
 	if i = upper (existingItems) then
-	    customPut (" and", true)
+	    storeText (" and")
 	end if
 
-	case existingItems (i) -> getName () (length (existingItems (i) -> getName())) of
+	case existingItems (i) -> getName () (length (existingItems (i) -> getName ())) of
 	    label "s" :
-		customPut (" " + existingItems (i) -> getName (), true)
+		storeText (" " + existingItems (i) -> getName ())
 	    label :
 		case existingItems (i) -> getName () (1) of
 		    label "a", "e", "i", "o", "u" :
-			customPut (" an " + existingItems (i) -> getName (), true)
+			storeText (" an " + existingItems (i) -> getName ())
 		    label :
-			customPut (" a " + existingItems (i) -> getName (), true)
+			storeText (" a " + existingItems (i) -> getName ())
 		end case
 	end case
 
 	if i = upper (existingItems) then
-	    customPut (" on the dirty floor.", false)
+	    customPut (" on the dirty floor.")
 	else
-	    customPut (",", true)
+	    storeText (",")
 	end if
     end for
 
     bind var room to roomCoord (x, y, z)
 
     if room -> northDoor or room -> eastDoor or room -> southDoor or room -> westDoor then
-	customPut ("There is a passage way to the ", true)
+	storeText ("There is a passage way to the ")
 
 	if room -> northDoor then
-	    customPut ("north", true)
+	    storeText ("north")
 	    if room -> eastDoor or room -> southDoor or room -> westDoor then
-		customPut (", ", true)
+		storeText (", ")
 	    end if
 	end if
 	if room -> eastDoor then
 	    if room -> southDoor or room -> westDoor then
-		customPut ("east, ", true)
+		storeText ("east, ")
 	    elsif room -> northDoor then
-		customPut ("and east", true)
+		storeText ("and east")
 	    else
-		customPut ("east", true)
+		storeText ("east")
 	    end if
 	end if
 	if room -> southDoor then
 	    if room -> westDoor then
-		customPut ("south, ", true)
+		storeText ("south, ")
 	    elsif room -> northDoor or room -> eastDoor then
-		customPut ("and south", true)
+		storeText ("and south")
 	    else
-		customPut ("south", true)
+		storeText ("south")
 	    end if
 	end if
 	if room -> westDoor then
 	    if room -> northDoor or room -> southDoor or room -> eastDoor then
-		customPut ("and west", true)
+		storeText ("and west")
 	    else
-		customPut ("west", true)
+		storeText ("west")
 	    end if
 	end if
-	customPut (" here.", false)
+	customPut (" here.")
     end if
 
     if room -> upStair or room -> downStair then
-	customPut ("You notice a passage leading ", true)
+	storeText ("You notice a passage leading ")
 
 	if room -> upStair then
 	    if room -> downStair then
-		customPut ("up ", true)
+		storeText ("up ")
 	    else
-		customPut ("up.", false)
+		customPut ("up.")
 	    end if
 	end if
 
 	if room -> downStair then
 	    if room -> upStair then
-		customPut ("and down.", false)
+		customPut ("and down.")
 	    else
-		customPut ("down.", false)
+		customPut ("down.")
 	    end if
 	end if
     end if

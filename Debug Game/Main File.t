@@ -6,7 +6,7 @@ initializeScreen ()
 
 include "class Item.t"
 
-forward proc customPut (userInput : string, continue : boolean)
+forward proc customPut (userInput : string)
 forward proc nothing (target : string, usedItem : ^Item)
 forward proc heal (target : string, usedItem : ^Item)
 forward proc poison (target : string, usedItem : ^Item)
@@ -36,6 +36,7 @@ include "proc addText.t"
 include "proc displayInventory.t"
 include "proc displayGear.t"
 include "proc customGet.t"
+include "proc storeText.t"
 include "proc customPut.t"
 include "proc noSecondInput.t"
 include "proc shiftItems.t"

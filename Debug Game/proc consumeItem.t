@@ -18,5 +18,5 @@ proc consumeItem (itemToConsume : ^Item, targetEntity : ^Entity)
 	    end if
 	end if
     end for
-    customPut ("You do not have a " + itemToConsume -> getName () + ".", false)
+    customPut ("You do not have a " + itemToConsume -> getName () + ".")
 end consumeItem

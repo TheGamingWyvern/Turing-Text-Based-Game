@@ -14,7 +14,7 @@ body proc heal
     end if
 
     if targetEntity = nil then
-	customPut ("That target does not exist.", false)
+	customPut ("That target does not exist.")
     else
 	var differenceInHealth : int := targetEntity -> maxMobHealth - targetEntity -> currentMobHealth
 
@@ -22,11 +22,11 @@ body proc heal
 
 	if targetEntity -> currentMobHealth > targetEntity -> maxMobHealth then
 	    targetEntity -> currentMobHealth := targetEntity -> maxMobHealth
-	    customPut ("You healed " + targetEntity -> name + " for " + intstr (differenceInHealth) + " health.", false)
+	    customPut ("You healed " + targetEntity -> name + " for " + intstr (differenceInHealth) + " health.")
 	    return
 	end if
 
-	customPut ("You healed the " + targetEntity -> name + " for " + intstr (value) + " health.", false)
+	customPut ("You healed the " + targetEntity -> name + " for " + intstr (value) + " health.")
 	return
     end if
 end heal

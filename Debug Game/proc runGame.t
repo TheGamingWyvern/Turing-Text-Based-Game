@@ -1,10 +1,10 @@
 proc runGame
     look
-    customPut ("", false)
+    customPut ("")
 
     loop
 	getInput
 	simulate
-	customPut ("", false)
+	customPut ("")
     end loop
 end runGame

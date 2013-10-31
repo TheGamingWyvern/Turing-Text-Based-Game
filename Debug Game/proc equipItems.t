@@ -82,13 +82,13 @@ proc equipItems (itemToEquip : ^Item)
 			itemToEquip -> getMinAtt (), itemToEquip -> getMaxAtt (), itemToEquip -> getMinDef (),
 			itemToEquip -> getMaxDef (), itemToEquip -> getDodgeBonus (), itemToEquip -> ability)
 		label :
-		    customPut ("You cannot equip that.", false)
+		    customPut ("You cannot equip that.")
 		    return
 	    end case
 	    shiftItems
-	    customPut ("You have equipped " + itemToEquip -> getName (), false)
+	    customPut ("You have equipped " + itemToEquip -> getName ())
 	    return
 	end if
     end for
-    customPut ("You do not have that.", false)
+    customPut ("You do not have that.")
 end equipItems

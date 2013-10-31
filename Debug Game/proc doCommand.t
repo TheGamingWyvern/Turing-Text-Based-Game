@@ -1,6 +1,6 @@
 proc doCommand (command, inputMatch :int)
     if itemSubjects > 1 or entitySubjects > 1 or directionSubjects > 1 then
-	customPut ("Too many subjects to satisfy the input command.", false)
+	customPut ("Too many subjects to satisfy the input command.")
     else
 	if requestedItem not= nil and requestedEntity = nil and requestedDirection = nil then
 	    case command of
@@ -36,11 +36,11 @@ proc doCommand (command, inputMatch :int)
 	elsif requestedItem = nil and requestedEntity = nil and requestedDirection = nil then
 	    case command of
 		label 1 :
-		    customPut ("Some time passes...", false)
+		    customPut ("Some time passes...")
 		label 6 :
 		    look
 		label 0 :
-		    customPut (noItem (Rand.Int (1,16)), false)
+		    customPut (noItem (Rand.Int (1,16)))
 		label :
 		    noSecondInput (command, inputMatch)
 	    end case
@@ -52,7 +52,7 @@ proc doCommand (command, inputMatch :int)
 		label :
 	    end case
 	else
-	    customPut ("You cannot " + input, false)
+	    customPut ("You cannot " + input)
 	end if
     end if
 end doCommand

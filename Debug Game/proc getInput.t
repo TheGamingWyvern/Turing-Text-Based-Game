@@ -23,7 +23,7 @@ proc getInput
 
     View.ClipOff
 
-    customPut (input, false)
+    customPut (input)
 
     % Searches the input to see if the command is valid,
     %  then sets the command category so the program knows what

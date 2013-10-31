@@ -14,7 +14,7 @@ proc spawnMob (mobToSpawn : ^Entity)
 		create (mob -> name, mob -> minAtt, mob -> maxAtt, mob -> minDef, mob -> maxDef,
 		mob -> currentHP, mob -> maxHP, mob -> dodgeBonus, mob -> ability)
 
-	    customPut ("You spawned the " + mobToSpawn -> name + ".", false)
+	    customPut ("You spawned the " + mobToSpawn -> name + ".")
 	end if
     end for
 end spawnMob

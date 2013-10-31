@@ -5,37 +5,9 @@
 %  into the character drawing or inventory.
 % This also makes the inventory display nicely, and the character, and the gear.
 body proc customPut
-    if continue then
-	storedText := storedText + userInput
-	loop
-	    if length (storedText) <= maxcol * 2 div 3 - 1 or length (storedText) = 0 then
-		exit
-	    else
-		for i : 0 .. length (storedText) - 1
-		    if storedText (length (storedText) - i) = " " and length (storedText) - i <= maxcol * 2 div 3 then
-			addText (storedText (1 .. length (storedText) - i))
-			storedText := storedText (length (storedText) - i + 1 .. length (storedText))
-			exit
-		    end if
-		end for
-	    end if
-	end loop
-    else
-	storedText := storedText + userInput
+	storeText (userInput)
+
 	previousTextLocation := 5
-
-	loop
-	    exit when length (storedText) <= (maxcol * 2 div 3) - 1
-
-	    for i : 0 .. length (storedText) - 1
-		if storedText (length (storedText) - i) = " " and length (storedText) - i <= maxcol * 2 div 3 then
-		    addText (storedText (1 .. length (storedText) - i))
-		    storedText := storedText (length (storedText) - i + 1 .. length (storedText))
-		    exit
-		end if
-	    end for
-	end loop
-
 	cls
 
 	addText (storedText)
@@ -88,5 +60,4 @@ body proc customPut
 	displayGear
 	drawCharacter
 	View.Update
-    end if
 end customPut

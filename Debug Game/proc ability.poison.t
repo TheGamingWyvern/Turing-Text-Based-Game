@@ -21,17 +21,17 @@ body proc poison
     end if
 
     if targetEntity = nil then
-	customPut ("That target does not exist.", false)
+	customPut ("That target does not exist.")
     else
 	targetEntity -> currentMobHealth -= value
 
 	if targetEntity -> currentMobHealth < 0 then
-	    customPut ("The " + targetEntity -> name + " has died.", false)
+	    customPut ("The " + targetEntity -> name + " has died.")
 	    targetEntity -> reset
 	    return
 	end if
 
-	customPut ("You dealt the " + targetEntity -> name + " " + intstr (value) + " poison damage.", false)
+	customPut ("You dealt the " + targetEntity -> name + " " + intstr (value) + " poison damage.")
 	return
     end if
 end poison

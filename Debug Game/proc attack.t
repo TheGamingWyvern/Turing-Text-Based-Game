@@ -5,7 +5,7 @@ proc attack (mobToAttack : ^Entity)
 	elsif mobToAttack = roomCoord (x, y, z) -> mobsInRoom (i) then
 	    damage (player, mobToAttack)
 	    if mobToAttack -> currentMobHealth <= 0 then
-		customPut ("You have killed the " + mobToAttack -> name + ".", false)
+		customPut ("You have killed the " + mobToAttack -> name + ".")
 		roomCoord (x, y, z) -> mobsInRoom (i) := nil
 	    end if
 	    return

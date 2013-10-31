@@ -7,7 +7,7 @@ proc dropItem (itemToDrop : ^Item)
 
 	for i : 1 .. 10
 	    if inventorySlots (i) -> getName () = itemToDrop -> getName () then
-		customPut ("You dropped the " + inventorySlots (i) -> getName (), false)
+		customPut ("You dropped the " + inventorySlots (i) -> getName ())
 		free inventorySlots (i)
 		new inventorySlots (i)
 		shiftItems
@@ -16,20 +16,20 @@ proc dropItem (itemToDrop : ^Item)
 	end for
 
 
-    customPut ("You do not have", true)
+    storeText ("You do not have")
 
     for i : 1 .. upper (inventorySlots)
 	case itemToDrop -> getName () (length (itemToDrop -> getName ())) of
 	    label "s" :
-		customPut (" " + itemToDrop -> getName () + " in your backpack.", false)
+		customPut (" " + itemToDrop -> getName () + " in your backpack.")
 		return
 	    label :
 		case itemToDrop -> getName () (1) of
 		    label "a", "e", "i", "o", "u" :
-			customPut (" an " + itemToDrop -> getName () + " in your backpack.", false)
+			customPut (" an " + itemToDrop -> getName () + " in your backpack.")
 			return
 		    label :
-			customPut (" a " + itemToDrop -> getName () + " in your backpack.", false)
+			customPut (" a " + itemToDrop -> getName () + " in your backpack.")
 			return
 		end case
 	end case

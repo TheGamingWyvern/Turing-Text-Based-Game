@@ -22,10 +22,10 @@ proc damage (mobDealingDamage, mobReceivingDamage : ^Entity)
     end if
 
     mobReceivingDamage -> currentMobHealth -= damageDealt
-    customPut ("The " + mobReceivingDamage -> name + " received " + intstr (damageDealt) + " damage!", false)
+    customPut ("The " + mobReceivingDamage -> name + " received " + intstr (damageDealt) + " damage!")
 
     if mobReceivingDamage -> currentMobHealth >= 1 then
-	customPut ("The " + mobReceivingDamage -> name + " has " + intstr (mobReceivingDamage -> currentMobHealth) + " health left!", false)
+	customPut ("The " + mobReceivingDamage -> name + " has " + intstr (mobReceivingDamage -> currentMobHealth) + " health left!")
     else
 	return
     end if
