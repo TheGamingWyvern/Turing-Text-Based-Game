@@ -1,6 +1,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%  MOVEMENT  %%%%%%%%%%%%%%%%%%%%%%%%%
 % Explanation
-% Checks in a text file to see if the current directional command
+% Checks in an array to see if the current directional command
 %  is valid.
 % If so, then the user's coordinates are changed respectively, and a room is
 %  created when the user gets to a new coordinate.
