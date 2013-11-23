@@ -19,5 +19,4 @@ proc addItem (itemToAdd : ^Item)
 	    end if
 	end for
     end if
-    customPut ("There is no " + itemToAdd -> getName () + " here.")
 end addItem

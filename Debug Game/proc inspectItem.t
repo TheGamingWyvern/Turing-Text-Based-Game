@@ -4,32 +4,19 @@
 %  and then display its description.
 % Like drop and add, if the item is not there, the program will tell you that you do not have it.
 proc inspectItem (itemToInspect : ^Item)
-    var tempText : string
-    for i : 1 .. upper (inventorySlots)
-	if inventorySlots (i) -> getName () = itemToInspect -> getName () then
-	    tempText := makeUppercase (inventorySlots (i) -> getName ())
-	    customPut (tempText + ": " + inventorySlots (i) -> getDesc ())
-	    return
+    customPut (makeUppercase (itemToInspect -> getName ()) + ": " + itemToInspect -> getDesc ())
+    if itemToInspect -> getItemType () not= "consumable" then
+
+	if itemToInspect -> getMinAtt () not= 0 and itemToInspect -> getMaxAtt () not= 0 then
+	    customPut ("Damage: " + intstr (itemToInspect -> getMinAtt ()) + " to " + intstr (itemToInspect -> getMaxAtt ()))
 	end if
-    end for
 
-    storeText ("You do not have")
+	if itemToInspect -> getMinDef () not= 0 and itemToInspect -> getMaxDef () not= 0 then
+	    customPut ("Defense: " + intstr (itemToInspect -> getMinDef ()) + " to " + intstr (itemToInspect -> getMaxDef ()))
+	end if
 
-    for i : 1 .. upper (inventorySlots)
-	case itemToInspect -> getName () (length (itemToInspect -> getName ())) of
-	    label "s" :
-		customPut (" " + itemToInspect -> getName () + " in your backpack.")
-		return
-	    label :
-		case itemToInspect -> getName () (1) of
-		    label "a", "e", "i", "o", "u" :
-			customPut (" an " + itemToInspect -> getName () + " in your backpack.")
-			return
-		    label :
-			customPut (" a " + itemToInspect -> getName () + " in your backpack.")
-			return
-		end case
-	end case
-	return
-    end for
+	if itemToInspect -> getDodgeBonus () not= 0 then
+	    customPut ("Dodge Bonus: " + intstr (itemToInspect -> getDodgeBonus ()) + "%")
+	end if
+    end if
 end inspectItem

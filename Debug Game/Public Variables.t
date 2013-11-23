@@ -50,7 +50,9 @@ var itemSubjects : int := 0
 var entitySubjects : int := 0
 var directionSubjects : int := 0
 
-var requestedItem : ^Item := nil
+var requestedItemOwned : ^Item := nil
+var requestedItemInRoom : ^Item := nil
+
 var requestedEntity : ^Entity := nil
 var requestedDirection : ^Direction := nil
 
@@ -64,10 +66,8 @@ for i : 1 .. (maxrow - 6)
     previousText (i) := ""
 end for
 
-
 % noItem is for the error messages from the txt
 var noItem : array 1 .. 16 of string
-
 noItem (1) := "What?"
 noItem (2) := "Let me think about it."
 noItem (3) := "Let me get back to you."
@@ -85,9 +85,9 @@ noItem (14) := "*sigh*"
 noItem (15) := "Come on, you can do it!"
 noItem (16) := "It's only your time you're wasting."
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 var commandArray : array 1 .. 10, 1 .. 5 of string
-
 commandArray (1, 1) := "hold up"
 commandArray (1, 2) := "sleep"
 commandArray (1, 3) := "rest"
@@ -148,9 +148,9 @@ commandArray (10, 3) := ""
 commandArray (10, 4) := ""
 commandArray (10, 5) := ""
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 var existingDirections : flexible array 1 .. 10 of ^Direction
-
 new existingDirections (1)
 existingDirections (1) -> name := "north"
 existingDirections (1) -> userDirection := "n"
@@ -190,9 +190,9 @@ new existingDirections (10)
 existingDirections (10) -> name := "down"
 existingDirections (10) -> userDirection := "d"
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 var existingEntities : array 1 .. 4 of ^Entity
-
 % syntax: existingEntities(index) -> create(name : string, minAtt, maxAtt, minDef, maxDef,
 %   currentHP, maxHP, dodgeChance : int, ability : action proc)
 new existingEntities (1)
@@ -207,12 +207,11 @@ existingEntities (3) -> create ("goblin", 3, 5, 4, 7, 10, 10, 2, mobNothing)
 new existingEntities (4)
 existingEntities (4) -> create ("spider", 5, 10, 4, 6, 15, 15, 3, mobNothing)
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 var existingItems : array 1 .. 17 of ^Item
-
 % syntax: existingItems(index) -> create(name : string, desc : string, type : string, minAttack : int,
 %   maxAttack : int, minDefense : int, maxDefense : int, dodgeChance : int, ability : action proc)
-
 % In the case of consumables, attack values is the healing property, or actual attack property
 % Example: Healing potion would have an attack value of, say, 10. It would heal the player 10 health.
 new existingItems (1)
@@ -283,3 +282,20 @@ new existingItems (17)
 existingItems (17) -> create ("potion of poison", "A deadly brew of potion that will dispatch any man at a moments notice.",
     "consumable", 15, 15, 0, 0, 0, poison)
 
+roomCoord (x, y, z) -> itemsInRoom (1) -> copy (existingItems (1))
+roomCoord (x, y, z) -> itemsInRoom (2) -> copy (existingItems (2))
+roomCoord (x, y, z) -> itemsInRoom (3) -> copy (existingItems (3))
+roomCoord (x, y, z) -> itemsInRoom (4) -> copy (existingItems (4))
+roomCoord (x, y, z) -> itemsInRoom (5) -> copy (existingItems (5))
+roomCoord (x, y, z) -> itemsInRoom (6) -> copy (existingItems (6))
+roomCoord (x, y, z) -> itemsInRoom (7) -> copy (existingItems (7))
+roomCoord (x, y, z) -> itemsInRoom (8) -> copy (existingItems (8))
+roomCoord (x, y, z) -> itemsInRoom (9) -> copy (existingItems (9))
+roomCoord (x, y, z) -> itemsInRoom (10) -> copy (existingItems (10))
+roomCoord (x, y, z) -> itemsInRoom (11) -> copy (existingItems (11))
+roomCoord (x, y, z) -> itemsInRoom (12) -> copy (existingItems (12))
+roomCoord (x, y, z) -> itemsInRoom (13) -> copy (existingItems (13))
+roomCoord (x, y, z) -> itemsInRoom (14) -> copy (existingItems (14))
+roomCoord (x, y, z) -> itemsInRoom (15) -> copy (existingItems (15))
+roomCoord (x, y, z) -> itemsInRoom (16) -> copy (existingItems (16))
+roomCoord (x, y, z) -> itemsInRoom (17) -> copy (existingItems (17))

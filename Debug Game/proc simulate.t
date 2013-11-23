@@ -6,7 +6,7 @@ proc simulate
     for i : 1 .. upper (roomCoord (x, y, z) -> mobsInRoom)
 	if roomCoord (x, y, z) -> mobsInRoom (i) -> name not= "" then
 	    if roomCoord (x, y, z) -> mobsInRoom (i) -> turnsUntilAttack = 0 then
-		damage (roomCoord (x, y, z) -> mobsInRoom (i), player) \
+		damage (roomCoord (x, y, z) -> mobsInRoom (i), player)
 	    else
 		roomCoord (x, y, z) -> mobsInRoom (i) -> turnsUntilAttack -= 1
 		customPut ("The mob cannot attack this turn.")

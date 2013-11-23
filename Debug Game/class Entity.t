@@ -21,7 +21,7 @@ class Entity
     var minDef, maxDef : int := 0
 
     var currentMobHealth, maxMobHealth : int := 0
-    var turnsUntilAttack : int = 0
+    var turnsUntilAttack : int := 1
 
     proc reset
 

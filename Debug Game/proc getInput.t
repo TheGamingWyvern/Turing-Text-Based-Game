@@ -6,7 +6,9 @@ proc getInput
     entitySubjects := 0
     directionSubjects := 0
 
-    requestedItem := nil
+    requestedItemOwned := nil
+    requestedItemInRoom := nil
+
     requestedEntity := nil
     requestedDirection := nil
 
@@ -40,33 +42,39 @@ proc getInput
 	end for
     end for
 
-    for i : 1 .. upper (existingItems)
-	if index (input, existingItems (i) -> getName ()) not= 0 then
+    for i : 1 .. upper (inventorySlots)
+	if index (input, inventorySlots (i) -> getName ()) not= 0 and inventorySlots (i) -> getName () not= "" then
 
-	    requestedItem := existingItems (i)
+	    requestedItemOwned := inventorySlots (i)
 
-	    /*requestedItem -> create (existingItems (i) -> getName (), existingItems (i) -> getDesc (),
-	     existingItems (i) -> getItemType (),
-	     existingItems (i) -> getMinAtt (), existingItems (i) -> getMaxAtt (), existingItems (i) -> getMinDef (),
-	     existingItems (i) -> getMaxDef (), existingItems (i) -> getDodgeBonus (), existingItems (i) -> ability)
-	     */
 	    itemSubjects += 1
-	    input := Str.Trim (input (length (existingItems (i) -> getName ()) + 1 .. length (input)))
+	    input := Str.Trim (input (length (inventorySlots (i) -> getName ()) + 1 .. length (input)))
+	end if
+    end for
+
+    for i : 1 .. upper (roomCoord (x, y, z) -> itemsInRoom)
+	if index (input, roomCoord (x, y, z) -> itemsInRoom (i) -> getName ()) not= 0 and roomCoord (x, y, z) -> itemsInRoom (i) -> getName () not= "" then
+
+	    requestedItemInRoom := roomCoord (x, y, z) -> itemsInRoom (i)
+
+	    itemSubjects += 1
+	    input := Str.Trim (input (length (roomCoord (x, y, z) -> itemsInRoom (i) -> getName ()) + 1 .. length (input)))
 	end if
     end for
 
     if index (input, player -> name) not= 0 then
 	requestedEntity := player
-	entitySubjects+=1
+
+	entitySubjects += 1
     end if
 
-    for i : 1 .. upper (existingEntities)
-	if index (input, existingEntities (i) -> name) not= 0 then
+    for i : 1 .. upper (roomCoord (x, y, z) -> mobsInRoom)
+	if index (input, roomCoord (x, y, y) -> mobsInRoom (i) -> name) not= 0 and roomCoord (x, y, z) -> mobsInRoom (i) -> name not= "" then
 
-	    requestedEntity := existingEntities (i)
+	    requestedEntity := roomCoord (x, y, z) -> mobsInRoom (i)
 
 	    entitySubjects += 1
-	    input := Str.Trim (input (length (existingEntities (i) -> name) + 1 .. length (input)))
+	    input := Str.Trim (input (length (roomCoord (x, y, z) -> mobsInRoom (i) -> name) + 1 .. length (input)))
 	end if
     end for
 
@@ -79,6 +87,6 @@ proc getInput
 	    input := Str.Trim (input (length (existingDirections (i) -> name) + 1 .. length (input)))
 	end if
     end for
-    
+
     doCommand (command, inputMatch)
 end getInput

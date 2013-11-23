@@ -7,30 +7,45 @@
 % If the item happens to be plural (irom greaves, sticks) then the program will omit "an" and "a"
 %  ("You see iron greaves here.", instead of, "You see a iron greaves here.")
 proc look
-    storeText ("You see")
-    for i : 1 .. (upper (existingItems))
-	if i = upper (existingItems) then
-	    storeText (" and")
-	end if
+    var numItemsInRoom : int := 0
 
-	case existingItems (i) -> getName () (length (existingItems (i) -> getName ())) of
-	    label "s" :
-		storeText (" " + existingItems (i) -> getName ())
-	    label :
-		case existingItems (i) -> getName () (1) of
-		    label "a", "e", "i", "o", "u" :
-			storeText (" an " + existingItems (i) -> getName ())
-		    label :
-			storeText (" a " + existingItems (i) -> getName ())
-		end case
-	end case
-
-	if i = upper (existingItems) then
-	    customPut (" on the dirty floor.")
-	else
-	    storeText (",")
+    for i : 1 .. upper (roomCoord (x, y, z) -> itemsInRoom)
+	if roomCoord (x, y, z) -> itemsInRoom (i) -> getName () not= "" then
+	    numItemsInRoom += 1
 	end if
     end for
+
+    storeText ("You see")
+    
+    if numItemsInRoom not= 0 then
+	for i : 1 .. numItemsInRoom
+	    if i = numItemsInRoom and numItemsInRoom > 1 then
+		storeText (" and")
+	    end if
+
+	    if roomCoord (x, y, z) -> itemsInRoom (i) -> getName () not= "" then
+		case roomCoord (x, y, z) -> itemsInRoom (i) -> getName () (length (roomCoord (x, y, z) -> itemsInRoom (i) -> getName ())) of
+		    label "s" :
+			storeText (" " + roomCoord (x, y, z) -> itemsInRoom (i) -> getName ())
+		    label :
+			case roomCoord (x, y, z) -> itemsInRoom (i) -> getName () (1) of
+			    label "a", "e", "i", "o", "u" :
+				storeText (" an " + roomCoord (x, y, z) -> itemsInRoom (i) -> getName ())
+			    label :
+				storeText (" a " + roomCoord (x, y, z) -> itemsInRoom (i) -> getName ())
+			end case
+		end case
+	    end if
+
+	    if i = numItemsInRoom then
+		customPut (" on the dirty floor.")
+	    elsif numItemsInRoom > 1 then
+		storeText (",")
+	    end if
+	end for
+    else
+	customPut (" nothing useful in this room.")
+    end if
 
     bind var room to roomCoord (x, y, z)
 

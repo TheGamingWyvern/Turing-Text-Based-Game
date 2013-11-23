@@ -1,58 +1,82 @@
-proc doCommand (command, inputMatch :int)
+proc doCommand (command, inputMatch : int)
     if itemSubjects > 1 or entitySubjects > 1 or directionSubjects > 1 then
 	customPut ("Too many subjects to satisfy the input command.")
     else
-	if requestedItem not= nil and requestedEntity = nil and requestedDirection = nil then
-	    case command of
-		label 3 :
-		    addItem (requestedItem)
-		label 4 :
-		    dropItem (requestedItem)
-		label 5 :
-		    inspectItem (requestedItem)
-		label 7 :
-		    consumeItem (requestedItem, requestedEntity)
-		label 8 :
-		    equipItems (requestedItem)
-		label :
-	    end case
+	if requestedEntity = nil then
+	    if requestedDirection = nil then
+		if requestedItemOwned not= nil then
+		    %If you own the item and want to do something with it, put the call here.
+		    case command of
+			label 4 :
+			    dropItem (requestedItemOwned)
+			label 5 :
+			    inspectItem (requestedItemOwned)
+			label 7 :
+			    consumeItem (requestedItemOwned, requestedEntity)
+			label 8 :
+			    equipItems (requestedItemOwned)
+			label :
+		    end case
 
-	elsif requestedItem = nil and requestedEntity not= nil and requestedDirection = nil then
-	    case command of
-		label 10 :
-		    spawnMob (requestedEntity)
-		label 2 :
-		    attack (requestedEntity)
-		label :
-	    end case
+		elsif requestedItemInRoom not= nil then
+		    %If the item is just on the ground, and you want to do something put the call here.
+		    case command of
+			label 3 :
+			    addItem (requestedItemInRoom)
+			label 5 :
+			    inspectItem (requestedItemInRoom)
+		    end case
 
-	elsif requestedDirection not= nil and requestedEntity = nil and requestedItem = nil then
-	    case command of
-		label 9 :
-		    movement (requestedDirection)
-		label :
-	    end case
+		else %Both items are nil
+		    case command of
+			label 1 :
+			    customPut ("Some time passes...")
+			label 6 :
+			    look
+			label 0 :
+			    customPut (noItem (Rand.Int (1, 16)))
+			label :
+			    noSecondInput (command, inputMatch)
+		    end case
+		end if
 
-	elsif requestedItem = nil and requestedEntity = nil and requestedDirection = nil then
-	    case command of
-		label 1 :
-		    customPut ("Some time passes...")
-		label 6 :
-		    look
-		label 0 :
-		    customPut (noItem (Rand.Int (1,16)))
-		label :
-		    noSecondInput (command, inputMatch)
-	    end case
+	    else %requestedDirection not= nil
+		if requestedItemOwned not= nil then
+		elsif requestedItemInRoom not= nil then
+		else
+		    case command of
+			label 9 :
+			    movement (requestedDirection)
+			label :
+		    end case
+		end if
+	    end if
 
-	elsif requestedItem not= nil and requestedEntity not= nil and requestedDirection = nil then
-	    case command of
-		label 7 :
-		    consumeItem (requestedItem, requestedEntity)
-		label :
-	    end case
-	else
-	    customPut ("You cannot " + input)
+	else %requestedEntity not= nil
+	    if requestedDirection = nil then
+		if requestedItemOwned not= nil then
+		    case command of
+			label 7 :
+			    consumeItem (requestedItemOwned, requestedEntity)
+			label :
+		    end case
+
+		elsif requestedItemInRoom not= nil then
+		else
+		    case command of
+			label 10 :
+			    spawnMob (requestedEntity)
+			label 2 :
+			    attack (requestedEntity)
+			label :
+		    end case
+		end if
+
+		/*else
+		 if requestedItemOwned not= nil
+		 elsif requestedItemInRoom not= nil
+		 end if*/
+	    end if
 	end if
     end if
 end doCommand
