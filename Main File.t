@@ -52,6 +52,8 @@ include "proc attack.t"
 include "proc randomGen.t"
 include "proc movement.t"
 include "proc simulate.t"
+include "proc cheatInItem (only for bugtesting).t" %REMOVE FOR FINAL GAME
+include "proc developerInput (only for bugtesting).t" %REMOVE FOR FINAL GAME
 include "proc doCommand.t"
 include "proc getInput.t"
 include "proc runGame.t"

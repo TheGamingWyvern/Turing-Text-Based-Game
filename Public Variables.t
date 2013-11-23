@@ -46,7 +46,7 @@ roomCoord (x, y, z) -> westDoor := true
 roomCoord (x, y, z) -> upStair := true
 roomCoord (x, y, z) -> downStair := false
 
-var itemSubjects : int := 0
+/*var itemSubjects : int := 0
 var entitySubjects : int := 0
 var directionSubjects : int := 0
 
@@ -54,7 +54,7 @@ var requestedItemOwned : ^Item := nil
 var requestedItemInRoom : ^Item := nil
 
 var requestedEntity : ^Entity := nil
-var requestedDirection : ^Direction := nil
+var requestedDirection : ^Direction := nil*/
 
 var input : string := ""
 
@@ -113,10 +113,10 @@ commandArray (4, 4) := "remove"
 commandArray (4, 5) := "drop"
 
 commandArray (5, 1) := "look at the"
-commandArray (5, 2) := "look"
-commandArray (5, 3) := "inspect the"
+commandArray (5, 2) := "inspect the"
+commandArray (5, 3) := "inspect"
 commandArray (5, 4) := "examine"
-commandArray (5, 5) := "inspect"
+commandArray (5, 5) := ""
 
 commandArray (6, 1) := "look around"
 commandArray (6, 2) := "look"

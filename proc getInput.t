@@ -2,15 +2,15 @@ proc getInput
     var command := 0
     var inputMatch := 0
 
-    itemSubjects := 0
-    entitySubjects := 0
-    directionSubjects := 0
+    var itemSubjects : int := 0
+    var entitySubjects : int := 0
+    var directionSubjects : int := 0
 
-    requestedItemOwned := nil
-    requestedItemInRoom := nil
+    var requestedItemOwned : ^Item := nil
+    var requestedItemInRoom : ^Item := nil
 
-    requestedEntity := nil
-    requestedDirection := nil
+    var requestedEntity : ^Entity := nil
+    var requestedDirection : ^Direction := nil
 
     var requestedMob : ^Entity
 
@@ -26,6 +26,17 @@ proc getInput
     View.ClipOff
 
     customPut (input)
+
+    if input (1 .. 2) = "op" then %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	input := input (3 .. length (input)) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	developerInput (input) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	return %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    elsif input (1 .. 9) = "developer" then %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	input := input (9 .. length (input)) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	developerInput (input) %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	return %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    end if %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
     % Searches the input to see if the command is valid,
     %  then sets the command category so the program knows what
@@ -88,5 +99,9 @@ proc getInput
 	end if
     end for
 
-    doCommand (command, inputMatch)
+    if itemSubjects > 1 or entitySubjects > 1 or directionSubjects > 1 then
+	customPut ("Too many subjects to satisfy the input command.")
+    else
+	doCommand (command, inputMatch, requestedItemOwned, requestedItemInRoom, requestedEntity, requestedDirection)
+    end if
 end getInput
