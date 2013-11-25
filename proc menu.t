@@ -4,6 +4,7 @@ proc menu
 	GUI.Quit, 50, 's', true)
 
     loop
+	View.Update ()
 	exit when GUI.ProcessEvent
     end loop
 

@@ -299,3 +299,15 @@ roomCoord (x, y, z) -> itemsInRoom (14) -> copy (existingItems (14))
 roomCoord (x, y, z) -> itemsInRoom (15) -> copy (existingItems (15))
 roomCoord (x, y, z) -> itemsInRoom (16) -> copy (existingItems (16))
 roomCoord (x, y, z) -> itemsInRoom (17) -> copy (existingItems (17))
+
+
+% Initializes the player's base stats when he/she starts the game.
+var player : ^Entity
+new player
+player -> name := "player"
+player -> minAtt := 3
+player -> maxAtt := 5
+player -> minDef := 5
+player -> maxDef := 5
+player -> maxMobHealth := 50
+player -> currentMobHealth := 50

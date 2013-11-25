@@ -19,8 +19,6 @@ forward proc mobPoison (target : ^Entity, caster : ^Entity)
 include "class Direction.t"
 include "class Room.t"
 
-include "initializePlayer.t"
-
 include "Public Variables.t"
 
 include "proc ability.nothing.t"

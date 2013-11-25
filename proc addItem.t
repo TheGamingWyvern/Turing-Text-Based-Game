@@ -10,11 +10,10 @@ proc addItem (itemToAdd : ^Item)
     else
 	for i : 1 .. upper (inventorySlots)
 	    if inventorySlots (i) -> getName () = "" then
-		inventorySlots (i) -> create (itemToAdd -> getName (), itemToAdd -> getDesc (),
-		    itemToAdd -> getItemType (),
-		    itemToAdd -> getMinAtt (), itemToAdd -> getMaxAtt (), itemToAdd -> getMinDef (),
-		    itemToAdd -> getMaxDef (), itemToAdd -> getDodgeBonus (), itemToAdd -> ability)
+		inventorySlots (i) -> copy (itemToAdd)
 		customPut ("You took the " + itemToAdd -> getName () + ".")
+		itemToAdd -> reset
+		shiftItems(roomCoord(x,y,z)->itemsInRoom)
 		return
 	    end if
 	end for

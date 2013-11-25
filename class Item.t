@@ -2,7 +2,7 @@ class Item
     export getName, getDesc, getItemType,
 	getMinAtt, getMaxAtt, getMinDef,
 	getMaxDef, getDodgeBonus, create, ability,
-	copy
+	copy, reset
 
     var name, desc, itemType : string := ""
     var ability : proc a (target : string, usedItem : ^Item)
@@ -61,5 +61,16 @@ class Item
 	    itemToCopy -> getMinAtt (), itemToCopy -> getMaxAtt (), itemToCopy -> getMinDef (),
 	    itemToCopy -> getMaxDef (), itemToCopy -> getDodgeBonus (), itemToCopy -> ability)
     end copy
+
+    proc reset
+	name := ""
+	desc := ""
+	itemType := ""
+	minAtt := 0
+	maxAtt := 0
+	minDef := 0
+	maxDef := 0
+	dodgeBonus := 0
+    end reset
 end Item
 

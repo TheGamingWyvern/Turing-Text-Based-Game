@@ -7,16 +7,15 @@
 % If the item is a poison or has a harmful effect, then the defined value will be deducted from your current health
 %  and the proper message will be displayed (You lost X health).
 proc consumeItem (itemToConsume : ^Item, targetEntity : ^Entity)
-    for i : 1 .. upper (inventorySlots)
-	if inventorySlots (i) -> getName () = itemToConsume -> getName () then
-	    if targetEntity = nil then
-		inventorySlots (i) -> ability ("", inventorySlots (i))
-		return
-	    else
-		inventorySlots (i) -> ability (targetEntity -> name, inventorySlots (i))
-		return
-	    end if
-	end if
-    end for
-    customPut ("You do not have a " + itemToConsume -> getName () + ".")
+    if targetEntity = nil then
+	itemToConsume -> ability ("", itemToConsume)
+    else
+	itemToConsume -> ability (targetEntity -> name, itemToConsume)
+    end if
+
+    customPut ("You have used the " + itemToConsume -> getName () + ".")
+
+    if itemToConsume -> getItemType() = "consumable" then
+	itemToConsume -> reset
+    end if
 end consumeItem
