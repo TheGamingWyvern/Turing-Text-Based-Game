@@ -29,7 +29,7 @@ include "proc ability.mobNothing.t"
 include "proc ability.mobPoison.t"
 
 include "fcn makeUppercase.t"
-include "proc drawCharacter.t"
+%include "proc drawCharacter.t"
 include "proc addText.t"
 include "proc displayInventory.t"
 include "proc displayGear.t"

@@ -22,11 +22,11 @@ body proc heal
 
 	if targetEntity -> currentMobHealth > targetEntity -> maxMobHealth then
 	    targetEntity -> currentMobHealth := targetEntity -> maxMobHealth
-	    customPut ("You healed " + targetEntity -> name + " for " + intstr (differenceInHealth) + " health.")
+	    customPut ("You healed " + targetEntity -> name + " for " + intstr (differenceInHealth) + " health!")
 	    return
 	end if
 
-	customPut ("You healed the " + targetEntity -> name + " for " + intstr (value) + " health.")
+	customPut ("You healed the " + targetEntity -> name + " for " + intstr (value) + " health!")
 	return
     end if
 end heal

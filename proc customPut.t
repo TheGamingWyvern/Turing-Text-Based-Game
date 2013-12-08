@@ -58,6 +58,6 @@ body proc customPut
 
 	displayInventory
 	displayGear
-	drawCharacter
+	%drawCharacter
 	View.Update
 end customPut
