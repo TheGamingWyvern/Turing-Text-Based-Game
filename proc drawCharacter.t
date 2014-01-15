@@ -1,8 +1,3 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%  DRAW CHARACTER  %%%%%%%%%%%%%%%%%%%%%%%%%
-% Explanation
-% Draws a thick stick-figure to the screen and changes colour
-%  based on how hurt the player is. Character model will be disabled if resolution
-% is too small.
 proc drawCharacter
     var characterColour : int
     if maxy >= 1000 then
