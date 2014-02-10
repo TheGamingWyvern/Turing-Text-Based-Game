@@ -65,6 +65,7 @@ proc movement (directionToMove : ^Direction)
 	label :
     end case
     randomGen
+    randomGenItems
     customPut ("You moved " + directionToMove -> name + ".")
     look
 end movement

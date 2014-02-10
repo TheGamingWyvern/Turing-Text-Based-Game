@@ -80,7 +80,7 @@ proc getInput
     end if
 
     for i : 1 .. upper (roomCoord (x, y, z) -> mobsInRoom)
-	if index (input, roomCoord (x, y, y) -> mobsInRoom (i) -> name) not= 0 and roomCoord (x, y, z) -> mobsInRoom (i) -> name not= "" then
+	if index (input, roomCoord (x, y, z) -> mobsInRoom (i) -> name) not= 0 and roomCoord (x, y, z) -> mobsInRoom (i) -> name not= "" then
 
 	    requestedEntity := roomCoord (x, y, z) -> mobsInRoom (i)
 

@@ -38,7 +38,7 @@ proc look
 	    end if
 
 	    if i = numItemsInRoom then
-		customPut (" on the dirty floor.")
+		customPut (" on the floor.")
 	    elsif numItemsInRoom > 1 then
 		storeText (",")
 	    end if

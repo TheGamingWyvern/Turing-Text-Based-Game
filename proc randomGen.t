@@ -3,37 +3,37 @@ proc randomGen
     if roomCoord (x, y, z) = nil then
 	new roomCoord (x, y, z)
 
-	if Rand.Int (0, 1) = 0 then
+	if Rand.Int (1, 4) = 1 then
 	    roomCoord (x, y, z) -> northDoor := false
 	else
 	    roomCoord (x, y, z) -> northDoor := true
 	end if
 
-	if Rand.Int (0, 1) = 0 then
+	if Rand.Int (1, 4) = 1 then
 	    roomCoord (x, y, z) -> southDoor := false
 	else
 	    roomCoord (x, y, z) -> southDoor := true
 	end if
 
-	if Rand.Int (0, 1) = 0 then
+	if Rand.Int (1, 4) = 1 then
 	    roomCoord (x, y, z) -> eastDoor := false
 	else
 	    roomCoord (x, y, z) -> eastDoor := true
 	end if
 
-	if Rand.Int (0, 1) = 0 then
+	if Rand.Int (1, 4) = 1 then
 	    roomCoord (x, y, z) -> westDoor := false
 	else
 	    roomCoord (x, y, z) -> westDoor := true
 	end if
 
-	if Rand.Int (0, 25) = 0 then
+	if Rand.Int (1, 25) = 1 then
 	    roomCoord (x, y, z) -> upStair := true
 	else
 	    roomCoord (x, y, z) -> upStair := false
 	end if
 
-	if Rand.Int (0, 25) = 0 then
+	if Rand.Int (1, 25) = 1 then
 	    roomCoord (x, y, z) -> downStair := true
 	else
 	    roomCoord (x, y, z) -> downStair := false

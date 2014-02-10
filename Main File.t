@@ -47,6 +47,7 @@ include "proc spawnMob.t"
 include "proc damage.t"
 include "proc attack.t"
 include "proc randomGen.t"
+include "proc randomGenItems.t"
 include "proc movement.t"
 include "proc simulate.t"
 include "proc cheatInItem (only for bugtesting).t" %REMOVE FOR FINAL GAME

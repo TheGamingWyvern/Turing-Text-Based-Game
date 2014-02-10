@@ -46,16 +46,6 @@ roomCoord (x, y, z) -> westDoor := true
 roomCoord (x, y, z) -> upStair := true
 roomCoord (x, y, z) -> downStair := false
 
-/*var itemSubjects : int := 0
-var entitySubjects : int := 0
-var directionSubjects : int := 0
-
-var requestedItemOwned : ^Item := nil
-var requestedItemInRoom : ^Item := nil
-
-var requestedEntity : ^Entity := nil
-var requestedDirection : ^Direction := nil*/
-
 var input : string := ""
 
 var previousTextStart : int := 1
@@ -126,9 +116,9 @@ commandArray (6, 5) := ""
 
 commandArray (7, 1) := "use a"
 commandArray (7, 2) := "use the"
-commandArray (7, 3) := "consume a"
-commandArray (7, 4) := "use"
-commandArray (7, 5) := "consume"
+commandArray (7, 3) := "use"
+commandArray (7, 4) := ""
+commandArray (7, 5) := ""
 
 commandArray (8, 1) := "put on the"
 commandArray (8, 2) := "put on"
@@ -193,113 +183,142 @@ existingDirections (10) -> userDirection := "d"
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 var existingEntities : array 1 .. 4 of ^Entity
-% syntax: existingEntities(index) -> create(name : string, minAtt, maxAtt, minDef, maxDef,
-%   currentHP, maxHP, dodgeChance : int, ability : action proc)
+% syntax: existingEntities(index) -> create(string name, int minAtt, int maxAtt, int minDef, int maxDef,
+%   int currentHP, int maxHP, int dodgeChance, proc ability)
 new existingEntities (1)
-existingEntities (1) -> create ("zombie", 3, 6, 3, 5, 10, 10, 1, mobNothing)
+existingEntities (1) -> create ("zombie", 4, 6, 3, 5, 20, 20, 1, mobNothing)
 
 new existingEntities (2)
-existingEntities (2) -> create ("skeleton", 5, 10, 4, 8, 15, 15, 1, mobNothing)
+existingEntities (2) -> create ("skeleton", 8, 10, 4, 8, 15, 15, 1, mobNothing)
 
 new existingEntities (3)
-existingEntities (3) -> create ("goblin", 3, 5, 4, 7, 10, 10, 2, mobNothing)
+existingEntities (3) -> create ("goblin", 2, 6, 4, 6, 10, 15, 2, mobNothing)
 
 new existingEntities (4)
 existingEntities (4) -> create ("spider", 5, 10, 4, 6, 15, 15, 3, mobNothing)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-var existingItems : array 1 .. 17 of ^Item
-% syntax: existingItems(index) -> create(name : string, desc : string, type : string, minAttack : int,
-%   maxAttack : int, minDefense : int, maxDefense : int, dodgeChance : int, ability : action proc)
+var existingItems : array 1 .. 3, 1 .. 8 of ^Item
+% syntax: existingItems(index) -> create(string name, string desc, string type, int minAttack,
+%   int maxAttack, int minDefense, int maxDefense, int dodgeChance, proc ability)
 % In the case of consumables, attack values is the healing property, or actual attack property
 % Example: Healing potion would have an attack value of, say, 10. It would heal the player 10 health.
-new existingItems (1)
-existingItems (1) -> create ("sharp stick", "A medium sized sharpened stick.",
-    "main hand", 2, 4, 0, 0, 0, nothing)
+new existingItems (1, 1)
+existingItems (1, 1) -> create ("bronze sword", "A common shortsword that could be forged by any blacksmith.",
+    "main hand", 2, 6, 0, 0, 0, nothing)
 
-new existingItems (2)
-existingItems (2) -> create ("bronze sword", "A common shortsword that could be forged by any blacksmith.",
-    "main hand", 4, 6, 0, 0, 0, nothing)
-
-new existingItems (3)
-existingItems (3) -> create ("steel sword", "A strong broadsword made of steel.",
-    "main hand", 6, 11, 0, 0, 0, nothing)
-
-new existingItems (4)
-existingItems (4) -> create ("wooden shield", "A weak shield made of wood.",
-    "off hand", 0, 0, 3, 5, 0, nothing)
-
-new existingItems (5)
-existingItems (5) -> create ("bronze shield", "A medium sized heater shield.",
+new existingItems (1, 2)
+existingItems (1, 2) -> create ("bronze shield", "A medium sized heater shield.",
     "off hand", 0, 0, 4, 6, 0, nothing)
 
-new existingItems (6)
-existingItems (6) -> create ("steel shield", "A large, rounded shield.",
-    "off hand", 0, 0, 7, 10, 0, nothing)
+new existingItems (1, 3)
+existingItems (1, 3) -> create ("bronze helm", "A bronze helmet.",
+    "head", 0, 0, 1, 2, 0, nothing)
 
-new existingItems (7)
-existingItems (7) -> create ("iron helmet", "A medium helmet that covers most of the face.",
+new existingItems (1, 4)
+existingItems (1, 4) -> create ("bronze chestplate", "A bronze chestplate.",
+    "body", 0, 0, 2, 4, 0, nothing)
+
+new existingItems (1, 5)
+existingItems (1, 5) -> create ("bronze leggings", "Bronze leggings.",
+    "legs", 0, 0, 1, 2, 0, nothing)
+
+new existingItems (1, 6)
+existingItems (1, 6) -> create ("bronze boots", "Bronze boots.",
+    "feet", 0, 0, 1, 2, 0, nothing)
+
+new existingItems (1, 7)
+existingItems (1, 7) -> create ("", "", "", 0, 0, 0, 0, 0, nothing)
+
+new existingItems (1, 8)
+existingItems (1, 8) -> create ("", "", "", 0, 0, 0, 0, 0, nothing)
+
+new existingItems (2, 1)
+existingItems (2, 1) -> create ("iron sword", "An iron sword.",
+    "main hand", 4, 6, 0, 0, 0, nothing)
+
+new existingItems (2, 2)
+existingItems (2, 2) -> create ("iron shield", "An iron shield.",
+    "off hand", 0, 0, 6, 8, 0, nothing)
+
+new existingItems (2, 3)
+existingItems (2, 3) -> create ("iron helmet", "A medium helmet that covers most of the face.",
     "head", 0, 0, 3, 3, 0, nothing)
 
-new existingItems (8)
-existingItems (8) -> create ("steel helmet", "A full helmet that covers the entire head.",
-    "head", 0, 0, 6, 6, 0, nothing)
-
-new existingItems (9)
-existingItems (9) -> create ("iron chestplate", "A small chestplate.",
+new existingItems (2, 4)
+existingItems (2, 4) -> create ("iron chestplate", "A small chestplate.",
     "body", 0, 0, 5, 5, 0, nothing)
 
-new existingItems (10)
-existingItems (10) -> create ("steel chestplate", "\"This is a really heavy piece of armour!\"",
-    "body", 0, 0, 10, 10, 0, nothing)
-
-new existingItems (11)
-existingItems (11) -> create ("iron leggings", "A weak piece of leg armour.",
+new existingItems (2, 5)
+existingItems (2, 5) -> create ("iron leggings", "Iron leg armour.",
     "legs", 0, 0, 2, 2, 0, nothing)
 
-new existingItems (12)
-existingItems (12) -> create ("steel greaves", "A strong piece of leg armour.",
-    "legs", 0, 0, 5, 5, 0, nothing)
-
-new existingItems (13)
-existingItems (13) -> create ("iron boots", "I recommend you don't go swimming with these...",
+new existingItems (2, 6)
+existingItems (2, 6) -> create ("iron boots", "I recommend you don't go swimming with these...",
     "feet", 0, 0, 2, 2, 0, nothing)
 
-new existingItems (14)
-existingItems (14) -> create ("steel boots", "\"These boots hardly fit my feet!\"",
-    "feet", 0, 0, 5, 5, 0, nothing)
-
-new existingItems (15)
-existingItems (15) -> create ("potion of lesser healing", "A concotion of regenerative liquid stored in a small vial.",
+new existingItems (2, 7)
+existingItems (2, 7) -> create ("potion of lesser healing", "A concotion of regenerative liquid stored in a small vial.",
     "consumable", 15, 15, 0, 0, 0, heal)
 
-new existingItems (16)
-existingItems (16) -> create ("potion of greater healing", "A concotion of regenerative liquid stored in a bottle.",
+new existingItems (2, 8)
+existingItems (2, 8) -> create ("", "", "", 0, 0, 0, 0, 0, nothing)
+
+new existingItems (3, 1)
+existingItems (3, 1) -> create ("steel sword", "A strong broadsword made of steel.",
+    "main hand", 6, 11, 0, 0, 0, nothing)
+
+new existingItems (3, 2)
+existingItems (3, 2) -> create ("steel shield", "A large, rounded shield.",
+    "off hand", 0, 0, 7, 10, 0, nothing)
+
+new existingItems (3, 3)
+existingItems (3, 3) -> create ("steel helmet", "A full helmet that covers the entire head.",
+    "head", 0, 0, 6, 6, 0, nothing)
+
+new existingItems (3, 4)
+existingItems (3, 4) -> create ("steel chestplate", "\"This is a really heavy piece of armour!\"",
+    "body", 0, 0, 10, 10, 0, nothing)
+
+new existingItems (3, 5)
+existingItems (3, 5) -> create ("steel greaves", "A strong piece of leg armour.",
+    "legs", 0, 0, 5, 5, 0, nothing)
+
+new existingItems (3, 6)
+existingItems (3, 6) -> create ("steel boots", "\"These boots hardly fit my feet!\"",
+    "feet", 0, 0, 5, 5, 0, nothing)
+
+new existingItems (3, 7)
+existingItems (3, 7) -> create ("potion of greater healing", "A concotion of regenerative liquid stored in a bottle.",
     "consumable", 25, 25, 0, 0, 0, heal)
 
-new existingItems (17)
-existingItems (17) -> create ("potion of poison", "A deadly brew of potion that will dispatch any man at a moments notice.",
+new existingItems (3, 8)
+existingItems (3, 8) -> create ("potion of poison", "A deadly brew of potion that will dispatch any man at a moments notice.",
     "consumable", 15, 15, 0, 0, 0, poison)
 
-roomCoord (x, y, z) -> itemsInRoom (1) -> copy (existingItems (1))
-roomCoord (x, y, z) -> itemsInRoom (2) -> copy (existingItems (2))
-roomCoord (x, y, z) -> itemsInRoom (3) -> copy (existingItems (3))
-roomCoord (x, y, z) -> itemsInRoom (4) -> copy (existingItems (4))
-roomCoord (x, y, z) -> itemsInRoom (5) -> copy (existingItems (5))
-roomCoord (x, y, z) -> itemsInRoom (6) -> copy (existingItems (6))
-roomCoord (x, y, z) -> itemsInRoom (7) -> copy (existingItems (7))
-roomCoord (x, y, z) -> itemsInRoom (8) -> copy (existingItems (8))
-roomCoord (x, y, z) -> itemsInRoom (9) -> copy (existingItems (9))
-roomCoord (x, y, z) -> itemsInRoom (10) -> copy (existingItems (10))
-roomCoord (x, y, z) -> itemsInRoom (11) -> copy (existingItems (11))
-roomCoord (x, y, z) -> itemsInRoom (12) -> copy (existingItems (12))
-roomCoord (x, y, z) -> itemsInRoom (13) -> copy (existingItems (13))
-roomCoord (x, y, z) -> itemsInRoom (14) -> copy (existingItems (14))
-roomCoord (x, y, z) -> itemsInRoom (15) -> copy (existingItems (15))
-roomCoord (x, y, z) -> itemsInRoom (16) -> copy (existingItems (16))
-roomCoord (x, y, z) -> itemsInRoom (17) -> copy (existingItems (17))
+roomCoord (x, y, z) -> itemsInRoom (1) -> copy (existingItems (1, 1))
+roomCoord (x, y, z) -> itemsInRoom (2) -> copy (existingItems (1, 2))
+roomCoord (x, y, z) -> itemsInRoom (3) -> copy (existingItems (1, 3))
+roomCoord (x, y, z) -> itemsInRoom (4) -> copy (existingItems (1, 4))
+roomCoord (x, y, z) -> itemsInRoom (5) -> copy (existingItems (1, 5))
+roomCoord (x, y, z) -> itemsInRoom (6) -> copy (existingItems (1, 6))
 
+roomCoord (x, y, z) -> itemsInRoom (7) -> copy (existingItems (2, 1))
+roomCoord (x, y, z) -> itemsInRoom (8) -> copy (existingItems (2, 2))
+roomCoord (x, y, z) -> itemsInRoom (9) -> copy (existingItems (2, 3))
+roomCoord (x, y, z) -> itemsInRoom (10) -> copy (existingItems (2, 4))
+roomCoord (x, y, z) -> itemsInRoom (11) -> copy (existingItems (2, 5))
+roomCoord (x, y, z) -> itemsInRoom (12) -> copy (existingItems (2, 6))
+roomCoord (x, y, z) -> itemsInRoom (13) -> copy (existingItems (2, 7))
+
+roomCoord (x, y, z) -> itemsInRoom (14) -> copy (existingItems (3, 1))
+roomCoord (x, y, z) -> itemsInRoom (15) -> copy (existingItems (3, 2))
+roomCoord (x, y, z) -> itemsInRoom (16) -> copy (existingItems (3, 3))
+roomCoord (x, y, z) -> itemsInRoom (17) -> copy (existingItems (3, 4))
+roomCoord (x, y, z) -> itemsInRoom (18) -> copy (existingItems (3, 5))
+roomCoord (x, y, z) -> itemsInRoom (19) -> copy (existingItems (3, 6))
+roomCoord (x, y, z) -> itemsInRoom (20) -> copy (existingItems (3, 7))
 
 % Initializes the player's base stats when he/she starts the game.
 var player : ^Entity
