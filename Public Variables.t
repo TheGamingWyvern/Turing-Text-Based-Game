@@ -182,20 +182,29 @@ existingDirections (10) -> userDirection := "d"
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-var existingEntities : array 1 .. 4 of ^Entity
+var existingEntities : array 1 .. 7 of ^Entity
 % syntax: existingEntities(index) -> create(string name, int minAtt, int maxAtt, int minDef, int maxDef,
 %   int currentHP, int maxHP, int dodgeChance, proc ability)
 new existingEntities (1)
-existingEntities (1) -> create ("zombie", 4, 6, 3, 5, 20, 20, 1, mobNothing)
+existingEntities (1) -> create ("zombie", 4, 6, 3, 5, 10, 15, 1, mobNothing)
 
 new existingEntities (2)
-existingEntities (2) -> create ("skeleton", 8, 10, 4, 8, 15, 15, 1, mobNothing)
+existingEntities (2) -> create ("skeleton", 6, 10, 4, 8, 10, 15, 1, mobNothing)
 
 new existingEntities (3)
-existingEntities (3) -> create ("goblin", 2, 6, 4, 6, 10, 15, 2, mobNothing)
+existingEntities (3) -> create ("goblin", 2, 6, 4, 6, 5, 10, 2, mobNothing)
 
 new existingEntities (4)
-existingEntities (4) -> create ("spider", 5, 10, 4, 6, 15, 15, 3, mobNothing)
+existingEntities (4) -> create ("spider", 5, 10, 4, 6, 10, 12, 3, mobNothing)
+
+new existingEntities (5)
+existingEntities (5) -> create ("orc", 8, 10, 5, 8, 20, 20, 1, mobNothing)
+
+new existingEntities (6)
+existingEntities (6) -> create ("elemental", 10, 10, 4, 6, 8, 12, 1, mobNothing)
+
+new existingEntities (7)
+existingEntities (7) -> create ("spell caster", 10, 15, 4, 8, 10, 15, mobNothing)
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

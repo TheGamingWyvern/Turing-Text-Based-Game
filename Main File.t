@@ -10,6 +10,7 @@ forward proc nothing (target : string, usedItem : ^Item)
 forward proc heal (target : string, usedItem : ^Item)
 forward proc poison (target : string, usedItem : ^Item)
 
+
 include "class Entity.t"
 
 forward proc mobNothing (target : ^Entity, caster : ^Entity)
@@ -17,6 +18,7 @@ forward proc mobPoison (target : ^Entity, caster : ^Entity)
 
 include "class Direction.t"
 include "class Room.t"
+include "class RoomType.t"
 
 include "Public Variables.t"
 

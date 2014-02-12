@@ -21,7 +21,7 @@ proc developerInput (originalInput : string)
     View.ClipSet (1, 1, maxx, 20)
     View.Set ("offscreenonly")
     View.ClipOff
-  
+
     var input : string := Str.Trim (originalInput)
     % Searches the input to see if the command is valid,
     %  then sets the command category so the program knows what
@@ -38,14 +38,16 @@ proc developerInput (originalInput : string)
 	end for
     end for
 
-    for i : 1 .. upper (existingItems)
-	if index (input, existingItems (i) -> getName ()) not= 0 and existingItems (i) -> getName () not= "" then
+    for i : 1 .. upper (existingItems, 1)
+	for j : 1 .. upper (existingItems, 2)
+	    if index (input, existingItems (i, j) -> getName ()) not= 0 and existingItems (i, j) -> getName () not= "" then
 
-	    requestedItem := existingItems (i)
+		requestedItem := existingItems (i, j)
 
-	    itemSubjects += 1
-	    input := Str.Trim (input (length (existingItems (i) -> getName ()) + 1 .. length (input)))
-	end if
+		itemSubjects += 1
+		input := Str.Trim (input (length (existingItems (i, j) -> getName ()) + 1 .. length (input)))
+	    end if
+	end for
     end for
 
 
